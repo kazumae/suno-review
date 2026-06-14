@@ -1,0 +1,66 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: laravel
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, curl, zip, gd, intl, bcmath, mysql
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Composer install (no-dev)
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Build assets (client + SSR)
+        run: |
+          npm ci
+          npm run build
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Rsync code to server
+        run: |
+          rsync -az --delete \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'node_modules' \
+            --exclude '.env' \
+            --exclude 'storage' \
+            --exclude 'public/storage' \
+            --exclude 'tests' \
+            -e "ssh -i ~/.ssh/id_rsa" \
+            ./ "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/var/www/suno/laravel/"
+
+      - name: Post-deploy (migrate, cache, restart)
+        run: |
+          ssh -i ~/.ssh/id_rsa "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+            'set -e; cd /var/www/suno/laravel; \
+             php artisan migrate --force; \
+             php artisan config:cache; php artisan route:cache; php artisan view:cache; \
+             sudo systemctl restart php8.4-fpm inertia-ssr suno-queue'

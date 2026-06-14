@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: suno-app
+    working_dir: /var/www/html
+    volumes:
+      - ./laravel:/var/www/html
+    depends_on:
+      - mysql
+
+  nginx:
+    image: nginx:alpine
+    container_name: suno-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./laravel:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.0
+    container_name: suno-mysql
+    environment:
+      MYSQL_DATABASE: suno
+      MYSQL_USER: suno
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+
+  node:
+    image: node:20-alpine
+    container_name: suno-node
+    working_dir: /var/www/html
+    volumes:
+      - ./laravel:/var/www/html
+      - /var/www/html/node_modules
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+volumes:
+  db-data:

@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Playwright MCP output / 検証用スクショ（ルート直下）
+.playwright-mcp/
+/*.png
+/*.jpeg
+/*.jpg
+
+# ローカル専用
+/docker/**/data
