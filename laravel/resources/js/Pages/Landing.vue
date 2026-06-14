@@ -31,6 +31,7 @@ import { Head, Link } from '@inertiajs/vue3';
                 <div class="mt-12">
                     <ImageSlot
                         ratio="aspect-[16/7]"
+                        size="2400×1050px（16:7 / 横長ヒーロー）"
                         caption="ヒーロー画像案: 満員のライブ会場で観客が熱狂し、ステージにオレンジのスポットライト。AI生成の楽曲が大舞台で鳴り響いているイメージ（黒基調＋オレンジの光）。"
                     />
                 </div>
@@ -50,6 +51,7 @@ import { Head, Link } from '@inertiajs/vue3';
                         </p>
                     </div>
                     <ImageSlot
+                        size="1200×900px（4:3）"
                         caption="画像案: 無機質なAI／ロボットの図と、感情豊かな人の横顔の対比。人の側にだけ温かいオレンジの光が当たっている。"
                     />
                 </div>
@@ -62,6 +64,7 @@ import { Head, Link } from '@inertiajs/vue3';
                 <div class="grid items-center gap-10 md:grid-cols-2">
                     <ImageSlot
                         class="md:order-first"
+                        size="1200×900px（4:3）"
                         caption="画像案: 1枚のジャケットを囲んで何人かが熱心に語り合い・レビューを書いている。吹き出し、星評価、手書きのメモ。"
                     />
                     <div>
@@ -89,6 +92,7 @@ import { Head, Link } from '@inertiajs/vue3';
                         </p>
                     </div>
                     <ImageSlot
+                        size="1200×900px（4:3）"
                         caption="画像案: 無数の楽曲ジャケットが敷き詰められた巨大な壁／海。その中の一枚だけがオレンジに発光している（＝埋もれた名曲）。"
                     />
                 </div>
@@ -144,6 +148,7 @@ import { Head, Link } from '@inertiajs/vue3';
                 <div class="mt-12">
                     <ImageSlot
                         ratio="aspect-[16/6]"
+                        size="1920×720px（16:6 / 横長）"
                         caption="フッター画像案: 多様な人が肩を組む／手を重ねる連帯のイメージ。背景に音の波形とステージ照明、オレンジ基調。"
                     />
                 </div>

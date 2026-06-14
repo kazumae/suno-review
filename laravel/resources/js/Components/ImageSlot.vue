@@ -1,6 +1,7 @@
 <script setup>
 defineProps({
     caption: { type: String, required: true },
+    size: { type: String, default: '' },
     ratio: { type: String, default: 'aspect-[4/3]' },
 });
 </script>
@@ -12,6 +13,7 @@ defineProps({
                 Image
             </div>
             <p class="text-sm leading-relaxed text-zinc-400">{{ caption }}</p>
+            <p v-if="size" class="mt-2 text-xs text-zinc-600">推奨サイズ {{ size }}</p>
         </div>
     </div>
 </template>
