@@ -28,11 +28,11 @@ import { Head, Link } from '@inertiajs/vue3';
                         楽曲を見る
                     </Link>
                 </div>
-                <div class="mt-12">
-                    <ImageSlot
-                        ratio="aspect-[16/7]"
-                        size="2400×1050px（16:7 / 横長ヒーロー）"
-                        caption="ヒーロー画像案: 満員のライブ会場で観客が熱狂し、ステージにオレンジのスポットライト。AI生成の楽曲が大舞台で鳴り響いているイメージ（黒基調＋オレンジの光）。"
+                <div class="mt-12 aspect-[16/7] w-full overflow-hidden ring-1 ring-zinc-800">
+                    <img
+                        src="/images/lp/hero-01.png"
+                        alt="AIが生んだ音楽を、あなたの耳でレビュー。SUNO MUSIC REVIEW MAGAZINE"
+                        class="h-full w-full object-cover"
                     />
                 </div>
             </div>
@@ -50,10 +50,9 @@ import { Head, Link } from '@inertiajs/vue3';
                             「AIが作りました」だけでは、心は動かない。技術の話の先にある“誰かの想い”にこそ、人は反応する。
                         </p>
                     </div>
-                    <ImageSlot
-                        size="1200×900px（4:3）"
-                        caption="画像案: 無機質なAI／ロボットの図と、感情豊かな人の横顔の対比。人の側にだけ温かいオレンジの光が当たっている。"
-                    />
+                    <div class="aspect-[4/3] w-full overflow-hidden ring-1 ring-zinc-800">
+                        <img src="/images/lp/section-02.png" alt="無機質なAIと、感情豊かな人の対比" class="h-full w-full object-cover" />
+                    </div>
                 </div>
             </div>
         </section>
@@ -62,11 +61,9 @@ import { Head, Link } from '@inertiajs/vue3';
         <section class="border-b border-zinc-800">
             <div class="mx-auto max-w-6xl px-4 py-20">
                 <div class="grid items-center gap-10 md:grid-cols-2">
-                    <ImageSlot
-                        class="md:order-first"
-                        size="1200×900px（4:3）"
-                        caption="画像案: 1枚のジャケットを囲んで何人かが熱心に語り合い・レビューを書いている。吹き出し、星評価、手書きのメモ。"
-                    />
+                    <div class="aspect-[4/3] w-full overflow-hidden ring-1 ring-zinc-800 md:order-first">
+                        <img src="/images/lp/section-03.png" alt="1枚の楽曲を囲んで語り合い、レビューを書く人々" class="h-full w-full object-cover" />
+                    </div>
                     <div>
                         <div class="text-sm font-bold tracking-[0.2em] text-brand-500">03</div>
                         <h2 class="mt-3 text-3xl font-bold leading-tight md:text-4xl">だから、感情とストーリーを載せる。</h2>
@@ -91,10 +88,9 @@ import { Head, Link } from '@inertiajs/vue3';
                             埋もれた一曲を見つけ、光を当てる。それは一人より、みんなでやったほうがずっと早い。
                         </p>
                     </div>
-                    <ImageSlot
-                        size="1200×900px（4:3）"
-                        caption="画像案: 無数の楽曲ジャケットが敷き詰められた巨大な壁／海。その中の一枚だけがオレンジに発光している（＝埋もれた名曲）。"
-                    />
+                    <div class="aspect-[4/3] w-full overflow-hidden ring-1 ring-zinc-800">
+                        <img src="/images/lp/section-04.png" alt="無数の楽曲の海で、一枚だけ輝くSUNOの名曲" class="h-full w-full object-cover" />
+                    </div>
                 </div>
             </div>
         </section>
