@@ -6,7 +6,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
 <template>
     <Head title="SUNOから、ヒット曲を生みたい">
-        <meta name="description" content="AIで作られた曲が市民権を得るには、まず一曲のヒットが要る。SUNOの楽曲に人のレビューと文脈を載せ、次のヒットを一緒に生み出す。" />
+        <meta name="description" content="AIで作られた曲が市民権を得るには、まず一曲のヒットが要る。SUNOの楽曲に人のレビューとストーリーを載せ、次のヒットを一緒に生み出す。" />
     </Head>
 
     <LpLayout>
@@ -66,7 +66,7 @@ import { Head, Link } from '@inertiajs/vue3';
                         <h2 class="mt-3 text-3xl font-bold leading-tight md:text-4xl">だから、感情とストーリーを載せる。</h2>
                         <p class="mt-5 text-lg text-zinc-300">楽曲を人が聴き、評価し、語る。そこに初めてストーリーが宿る。</p>
                         <p class="mt-4 leading-relaxed text-zinc-400">
-                            レビューは点数じゃない。なぜ良いのか、どんな夜に効くのか——文脈が、ただの音源を“誰かの一曲”に変える。
+                            レビューは点数じゃない。なぜ良いのか、どんな夜に効くのか——ストーリーが、ただの音源を“誰かの一曲”に変える。
                         </p>
                     </div>
                 </div>
@@ -98,7 +98,7 @@ import { Head, Link } from '@inertiajs/vue3';
                 <div class="mx-auto max-w-2xl text-center">
                     <div class="text-sm font-bold tracking-[0.2em] text-brand-500">05</div>
                     <h2 class="mt-3 text-3xl font-bold leading-tight md:text-4xl">だから、協力してほしい。</h2>
-                    <p class="mt-5 text-lg text-zinc-300">レビューしてほしい曲を、ここから送ってください。編集部とレビュワーが聴いて、文脈を添えてレビューします。</p>
+                    <p class="mt-5 text-lg text-zinc-300">レビューしてほしい曲を、ここから送ってください。編集部とレビュワーが聴いて、ストーリーを添えてレビューします。</p>
                 </div>
                 <div class="mx-auto mt-10 max-w-2xl">
                     <RequestForm />

@@ -14,7 +14,7 @@ defineProps({
 
 <template>
     <Head title="SUNOの楽曲レビュー">
-        <meta name="description" content="SUNOで作られた楽曲をレビュワーが聴き込み、文脈を添える。ランキング・新着・ジャンルから次のヒットを見つけよう。" />
+        <meta name="description" content="SUNOで作られた楽曲をレビュワーが聴き込み、ストーリーを添える。ランキング・新着・ジャンルから次のヒットを見つけよう。" />
     </Head>
 
     <PublicLayout>

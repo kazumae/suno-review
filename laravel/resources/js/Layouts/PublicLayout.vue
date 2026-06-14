@@ -68,7 +68,7 @@ const search = () => {
                 <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
                     <div>
                         <div class="font-bold text-zinc-300">SUNO <span class="text-brand-500">Review</span></div>
-                        <p class="mt-1">SUNOの楽曲に文脈を。レビューで次のヒットを。</p>
+                        <p class="mt-1">SUNOの楽曲に、ストーリーを。レビューで次のヒットを。</p>
                     </div>
                     <nav class="flex gap-5">
                         <Link :href="route('requests.create')" class="transition hover:text-zinc-300">レビュー依頼</Link>

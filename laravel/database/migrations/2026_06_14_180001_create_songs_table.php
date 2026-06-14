@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('genre')->nullable();
             $table->json('tags')->nullable();
             $table->string('cover_image_path')->nullable();
-            $table->text('description')->nullable(); // 作者の文脈
+            $table->text('description')->nullable(); // 作者のストーリー
             $table->string('status')->default('pending'); // pending|published|rejected
             $table->unsignedBigInteger('view_count')->default(0);
             $table->boolean('is_featured')->default(false); // 編集部ピック

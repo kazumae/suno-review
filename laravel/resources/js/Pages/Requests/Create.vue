@@ -25,7 +25,7 @@ const submit = () => form.post(route('requests.store'));
         <div class="mx-auto max-w-2xl px-4 py-10">
             <h1 class="text-2xl font-bold">レビュー依頼</h1>
             <p class="mt-2 text-zinc-400">
-                SUNOの楽曲URLを送ってください。編集部とレビュワーが聴いて、文脈を添えてレビューします。
+                SUNOの楽曲URLを送ってください。編集部とレビュワーが聴いて、ストーリーを添えてレビューします。
             </p>
 
             <form class="mt-8 space-y-5" @submit.prevent="submit">

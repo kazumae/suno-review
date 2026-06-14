@@ -24,7 +24,7 @@
         <footer class="mt-16 border-t border-zinc-800">
             <div class="mx-auto max-w-7xl px-4 py-10 text-sm text-zinc-500">
                 <div class="font-bold text-zinc-300">SUNO <span class="text-brand-500">Review</span></div>
-                <p class="mt-1">SUNOの楽曲に文脈を。レビューで次のヒットを。</p>
+                <p class="mt-1">SUNOの楽曲に、ストーリーを。レビューで次のヒットを。</p>
                 <p class="mt-6 text-xs text-zinc-600">© 2026 SUNO Review</p>
             </div>
         </footer>
