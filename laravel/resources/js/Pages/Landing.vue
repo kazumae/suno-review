@@ -1,5 +1,5 @@
 <script setup>
-import PublicLayout from '@/Layouts/PublicLayout.vue';
+import LpLayout from '@/Layouts/LpLayout.vue';
 import RequestForm from '@/Components/RequestForm.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>
@@ -9,7 +9,7 @@ import { Head, Link } from '@inertiajs/vue3';
         <meta name="description" content="AIで作られた曲が市民権を得るには、まず一曲のヒットが要る。SUNOの楽曲に人のレビューと文脈を載せ、次のヒットを一緒に生み出す。" />
     </Head>
 
-    <PublicLayout>
+    <LpLayout>
         <!-- 01 HERO -->
         <section class="border-b border-zinc-800 bg-gradient-to-b from-zinc-900 to-zinc-950">
             <div class="mx-auto max-w-6xl px-4 py-20 md:py-28">
@@ -126,5 +126,5 @@ import { Head, Link } from '@inertiajs/vue3';
                 </div>
             </div>
         </section>
-    </PublicLayout>
+    </LpLayout>
 </template>
