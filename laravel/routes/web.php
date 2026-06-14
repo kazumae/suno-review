@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/lp', fn () => Inertia::render('Landing'))->name('landing');
 
 Route::get('/songs/{song}', [SongController::class, 'show'])->name('songs.show');
 Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
