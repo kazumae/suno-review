@@ -24,9 +24,6 @@ import { Head, Link } from '@inertiajs/vue3';
                     <Link :href="route('requests.create')" class="rounded-full bg-brand-500 px-6 py-3 font-semibold text-black transition hover:bg-brand-400">
                         レビューを依頼する
                     </Link>
-                    <Link :href="route('home')" class="rounded-full border border-zinc-700 px-6 py-3 font-semibold text-zinc-200 transition hover:border-zinc-500">
-                        楽曲を見る
-                    </Link>
                 </div>
                 <div class="mt-12 aspect-[16/7] w-full overflow-hidden ring-1 ring-zinc-800">
                     <img
@@ -117,9 +114,6 @@ import { Head, Link } from '@inertiajs/vue3';
                         <p class="mt-3 leading-relaxed text-zinc-400">
                             目利きとして、曲にストーリーを与える側に。あなたのレビューが、次のヒットの最初の一押しになる。
                         </p>
-                        <a href="mailto:kazu.maekawa@gmail.com?subject=SUNO Review レビュワー応募" class="mt-5 inline-block rounded-full border border-zinc-700 px-5 py-2.5 text-sm font-semibold text-zinc-200 transition hover:border-brand-500 hover:text-brand-400">
-                            レビュワーに応募する
-                        </a>
                     </div>
                 </div>
             </div>
@@ -137,16 +131,11 @@ import { Head, Link } from '@inertiajs/vue3';
                     <Link :href="route('requests.create')" class="rounded-full bg-brand-500 px-7 py-3.5 font-semibold text-black transition hover:bg-brand-400">
                         レビューを依頼する
                     </Link>
-                    <Link :href="route('home')" class="rounded-full border border-zinc-700 px-7 py-3.5 font-semibold text-zinc-200 transition hover:border-zinc-500">
-                        楽曲を見る
-                    </Link>
                 </div>
                 <div class="mt-12">
-                    <ImageSlot
-                        ratio="aspect-[16/6]"
-                        size="1920×720px（16:6 / 横長）"
-                        caption="フッター画像案: 多様な人が肩を組む／手を重ねる連帯のイメージ。背景に音の波形とステージ照明、オレンジ基調。"
-                    />
+                    <div class="aspect-[16/6] w-full overflow-hidden ring-1 ring-zinc-800">
+                        <img src="/images/lp/section-06.png" alt="一緒にSUNOを、AI音楽を盛り上げよう" class="h-full w-full object-cover" />
+                    </div>
                 </div>
             </div>
         </section>

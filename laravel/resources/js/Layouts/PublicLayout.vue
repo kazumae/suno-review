@@ -71,7 +71,6 @@ const search = () => {
                         <p class="mt-1">SUNOの楽曲に文脈を。レビューで次のヒットを。</p>
                     </div>
                     <nav class="flex gap-5">
-                        <Link :href="route('home')" class="transition hover:text-zinc-300">ホーム</Link>
                         <Link :href="route('requests.create')" class="transition hover:text-zinc-300">レビュー依頼</Link>
                     </nav>
                 </div>
