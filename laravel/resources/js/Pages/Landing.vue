@@ -95,11 +95,12 @@ import { Head, Link } from '@inertiajs/vue3';
         <!-- 05 協力 -->
         <section id="request" class="scroll-mt-16 border-b border-zinc-800 bg-zinc-900/30">
             <div class="mx-auto max-w-6xl px-4 py-20">
-                <div class="text-sm font-bold tracking-[0.2em] text-brand-500">05</div>
-                <h2 class="mt-3 text-3xl font-bold leading-tight md:text-4xl">だから、協力してほしい。</h2>
-                <p class="mt-5 max-w-2xl text-lg text-zinc-300">レビューしてほしい曲を、ここから送ってください。編集部とレビュワーが聴いて、文脈を添えてレビューします。</p>
-
-                <div class="mt-10 max-w-2xl">
+                <div class="mx-auto max-w-2xl text-center">
+                    <div class="text-sm font-bold tracking-[0.2em] text-brand-500">05</div>
+                    <h2 class="mt-3 text-3xl font-bold leading-tight md:text-4xl">だから、協力してほしい。</h2>
+                    <p class="mt-5 text-lg text-zinc-300">レビューしてほしい曲を、ここから送ってください。編集部とレビュワーが聴いて、文脈を添えてレビューします。</p>
+                </div>
+                <div class="mx-auto mt-10 max-w-2xl">
                     <RequestForm />
                 </div>
             </div>
