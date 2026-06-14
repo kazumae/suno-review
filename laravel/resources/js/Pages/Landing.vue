@@ -1,6 +1,6 @@
 <script setup>
 import PublicLayout from '@/Layouts/PublicLayout.vue';
-import ImageSlot from '@/Components/ImageSlot.vue';
+import RequestForm from '@/Components/RequestForm.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>
 
@@ -21,9 +21,9 @@ import { Head, Link } from '@inertiajs/vue3';
                     AIで作られた曲が市民権を得るには、まず一曲、世の中に届く「ヒット」が要る。
                 </p>
                 <div class="mt-8 flex flex-wrap gap-3">
-                    <Link :href="route('requests.create')" class="rounded-full bg-brand-500 px-6 py-3 font-semibold text-black transition hover:bg-brand-400">
+                    <a href="#request" class="rounded-full bg-brand-500 px-6 py-3 font-semibold text-black transition hover:bg-brand-400">
                         レビューを依頼する
-                    </Link>
+                    </a>
                 </div>
                 <div class="mt-12 aspect-[16/7] w-full overflow-hidden ring-1 ring-zinc-800">
                     <img
@@ -93,28 +93,14 @@ import { Head, Link } from '@inertiajs/vue3';
         </section>
 
         <!-- 05 協力 -->
-        <section class="border-b border-zinc-800 bg-zinc-900/30">
+        <section id="request" class="scroll-mt-16 border-b border-zinc-800 bg-zinc-900/30">
             <div class="mx-auto max-w-6xl px-4 py-20">
                 <div class="text-sm font-bold tracking-[0.2em] text-brand-500">05</div>
                 <h2 class="mt-3 text-3xl font-bold leading-tight md:text-4xl">だから、協力してほしい。</h2>
-                <p class="mt-5 max-w-2xl text-lg text-zinc-300">レビューしてほしい曲がある人も、曲を聴いて語りたい人も。</p>
+                <p class="mt-5 max-w-2xl text-lg text-zinc-300">レビューしてほしい曲を、ここから送ってください。編集部とレビュワーが聴いて、文脈を添えてレビューします。</p>
 
-                <div class="mt-10 grid gap-4 md:grid-cols-2">
-                    <div class="border border-zinc-800 bg-zinc-950 p-8">
-                        <h3 class="text-xl font-bold">曲を届けたい人へ</h3>
-                        <p class="mt-3 leading-relaxed text-zinc-400">
-                            自信作をレビュー依頼。第三者の言葉と文脈を添えて、ただのアップロードを“作品”として世に出す。
-                        </p>
-                        <Link :href="route('requests.create')" class="mt-5 inline-block rounded-full bg-brand-500 px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-brand-400">
-                            レビューを依頼する
-                        </Link>
-                    </div>
-                    <div class="border border-zinc-800 bg-zinc-950 p-8">
-                        <h3 class="text-xl font-bold">聴いて語りたい人へ</h3>
-                        <p class="mt-3 leading-relaxed text-zinc-400">
-                            目利きとして、曲にストーリーを与える側に。あなたのレビューが、次のヒットの最初の一押しになる。
-                        </p>
-                    </div>
+                <div class="mt-10 max-w-2xl">
+                    <RequestForm />
                 </div>
             </div>
         </section>
@@ -128,9 +114,9 @@ import { Head, Link } from '@inertiajs/vue3';
                 </h2>
                 <p class="mt-6 text-lg text-zinc-300">次のヒットは、ここから生まれる。</p>
                 <div class="mt-9 flex flex-wrap justify-center gap-3">
-                    <Link :href="route('requests.create')" class="rounded-full bg-brand-500 px-7 py-3.5 font-semibold text-black transition hover:bg-brand-400">
+                    <a href="#request" class="rounded-full bg-brand-500 px-7 py-3.5 font-semibold text-black transition hover:bg-brand-400">
                         レビューを依頼する
-                    </Link>
+                    </a>
                 </div>
                 <div class="mt-12">
                     <div class="aspect-[16/6] w-full overflow-hidden ring-1 ring-zinc-800">

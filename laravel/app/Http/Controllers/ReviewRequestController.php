@@ -30,6 +30,11 @@ class ReviewRequestController extends Controller
 
         ReviewRequest::create($data);
 
+        if ($request->boolean('inline')) {
+            // LP埋め込みフォーム: ページ遷移せずその場に留まる（成功表示はフロント側）
+            return back();
+        }
+
         return redirect()->route('home')
             ->with('success', 'レビュー依頼を受け付けました。編集部とレビュワーが確認します。');
     }
