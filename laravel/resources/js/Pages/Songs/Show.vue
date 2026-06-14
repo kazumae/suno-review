@@ -1,5 +1,6 @@
 <script setup>
 import PublicLayout from '@/Layouts/PublicLayout.vue';
+import ShareButtons from '@/Components/ShareButtons.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
@@ -38,6 +39,9 @@ defineProps({
                         <a v-if="song.youtube_url" :href="song.youtube_url" target="_blank" rel="noopener" class="rounded-full border border-zinc-700 px-4 py-2 text-zinc-200 transition hover:border-zinc-500">YouTube</a>
                     </div>
                     <p class="mt-3 text-xs text-zinc-600">{{ song.view_count }} 回再生 ・ レビュー {{ song.reviews?.length || 0 }}件</p>
+                    <div class="mt-4">
+                        <ShareButtons :url="route('songs.show', song.id)" :title="`${song.title} / ${song.artist_name}`" />
+                    </div>
                 </div>
             </div>
 

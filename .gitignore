@@ -9,3 +9,4 @@
 
 # ローカル専用
 /docker/**/data
+.secrets
