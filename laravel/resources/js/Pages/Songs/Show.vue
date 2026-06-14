@@ -15,6 +15,7 @@ defineProps({
         <meta property="og:description" :content="(song.description || '').slice(0, 120)" />
         <meta v-if="song.cover_url" property="og:image" :content="song.cover_url" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta v-if="song.cover_url" name="twitter:image" :content="song.cover_url" />
     </Head>
 
     <PublicLayout>

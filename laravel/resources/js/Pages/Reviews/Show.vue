@@ -20,6 +20,7 @@ const publishedDate = props.review.published_at
         <meta property="og:description" :content="(review.body || '').slice(0, 120)" />
         <meta v-if="review.cover_url" property="og:image" :content="review.cover_url" />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta v-if="review.cover_url" name="twitter:image" :content="review.cover_url" />
     </Head>
 
     <PublicLayout>
