@@ -19,6 +19,7 @@ class ReviewRequestController extends Controller
     {
         $data = $request->validate([
             'suno_url' => ['required', 'url', 'max:255'],
+            'artist_url' => ['required', 'url', 'max:255'],
             'youtube_url' => ['nullable', 'url', 'max:255'],
             'title' => ['nullable', 'string', 'max:255'],
             'genre' => ['nullable', 'string', 'max:50'],

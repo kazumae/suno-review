@@ -34,6 +34,7 @@ class SongController extends Controller
                     'request_id' => $rr->id,
                     'title' => $rr->title,
                     'suno_url' => $rr->suno_url,
+                    'artist_url' => $rr->artist_url,
                     'youtube_url' => $rr->youtube_url,
                     'genre' => $rr->genre,
                 ];
@@ -82,6 +83,7 @@ class SongController extends Controller
         return $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'artist_name' => ['required', 'string', 'max:255'],
+            'artist_url' => ['required', 'url', 'max:255'],
             'suno_url' => ['required', 'url', 'max:255'],
             'youtube_url' => ['nullable', 'url', 'max:255'],
             'genre' => ['nullable', 'string', 'max:50'],
@@ -97,6 +99,7 @@ class SongController extends Controller
     {
         $song->title = $data['title'];
         $song->artist_name = $data['artist_name'];
+        $song->artist_url = $data['artist_url'];
         $song->suno_url = $this->normalizeSunoUrl($data['suno_url']);
         $song->youtube_url = $data['youtube_url'] ?? null;
         $song->genre = $data['genre'] ?? null;

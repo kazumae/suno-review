@@ -15,6 +15,7 @@ class ReviewRequest extends Model
         'song_id',
         'assigned_reviewer_id',
         'suno_url',
+        'artist_url',
         'youtube_url',
         'title',
         'genre',

@@ -34,7 +34,19 @@ defineProps({
                         </Link>
                     </div>
                     <h1 class="text-2xl font-bold md:text-3xl">{{ song.title }}</h1>
-                    <p class="mt-1 text-zinc-400">{{ song.artist_name }}</p>
+                    <p class="mt-1 text-zinc-400">
+                        <a
+                            v-if="song.artist_url"
+                            :href="song.artist_url"
+                            target="_blank"
+                            rel="noopener"
+                            class="inline-flex items-center gap-1 transition hover:text-brand-400"
+                        >
+                            {{ song.artist_name }}
+                            <span aria-hidden="true" class="text-xs">↗</span>
+                        </a>
+                        <span v-else>{{ song.artist_name }}</span>
+                    </p>
                     <div class="mt-4 flex flex-wrap gap-2 text-sm">
                         <a :href="song.suno_url" target="_blank" rel="noopener" class="rounded-full bg-brand-500 px-4 py-2 font-semibold text-black transition hover:bg-brand-400">SUNOで聴く</a>
                         <a v-if="song.youtube_url" :href="song.youtube_url" target="_blank" rel="noopener" class="rounded-full border border-zinc-700 px-4 py-2 text-zinc-200 transition hover:border-zinc-500">YouTube</a>

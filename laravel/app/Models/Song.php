@@ -16,6 +16,7 @@ class Song extends Model
         'submitted_by',
         'title',
         'artist_name',
+        'artist_url',
         'slug',
         'suno_url',
         'youtube_url',

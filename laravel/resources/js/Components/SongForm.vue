@@ -14,6 +14,7 @@ const src = props.song || props.prefill || {};
 const form = useForm({
     title: src.title || '',
     artist_name: src.artist_name || '',
+    artist_url: src.artist_url || '',
     suno_url: src.suno_url || '',
     youtube_url: src.youtube_url || '',
     genre: src.genre || '',
@@ -52,6 +53,13 @@ const submit = () => {
             <label class="block text-sm font-medium text-zinc-300">アーティスト名 <span class="text-brand-500">*</span></label>
             <input v-model="form.artist_name" type="text" :class="inputClass" />
             <p v-if="form.errors.artist_name" class="mt-1 text-sm text-red-400">{{ form.errors.artist_name }}</p>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-zinc-300">アーティストページURL <span class="text-brand-500">*</span></label>
+            <input v-model="form.artist_url" type="url" placeholder="https://suno.com/@yourname" :class="inputClass" />
+            <p class="mt-1 text-xs text-zinc-500">楽曲詳細でアーティスト名からこのURLにリンクします。</p>
+            <p v-if="form.errors.artist_url" class="mt-1 text-sm text-red-400">{{ form.errors.artist_url }}</p>
         </div>
 
         <div>

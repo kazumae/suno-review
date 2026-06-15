@@ -9,6 +9,7 @@ const inputClass =
 
 const form = useForm({
     suno_url: '',
+    artist_url: '',
     youtube_url: '',
     title: '',
     genre: '',
@@ -35,6 +36,15 @@ const submit = () => form.post(route('requests.store'));
                     </label>
                     <input v-model="form.suno_url" type="url" required placeholder="https://suno.com/song/..." :class="inputClass" />
                     <p v-if="form.errors.suno_url" class="mt-1 text-sm text-red-400">{{ form.errors.suno_url }}</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-zinc-300">
+                        アーティストページURL <span class="text-brand-500">*</span>
+                    </label>
+                    <input v-model="form.artist_url" type="url" required placeholder="https://suno.com/@yourname" :class="inputClass" />
+                    <p class="mt-1 text-xs text-zinc-500">あなたのSUNOプロフィールなど、アーティストのトップページ。楽曲ページからリンクします。</p>
+                    <p v-if="form.errors.artist_url" class="mt-1 text-sm text-red-400">{{ form.errors.artist_url }}</p>
                 </div>
 
                 <div>
