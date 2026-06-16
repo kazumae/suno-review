@@ -2,15 +2,20 @@
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
+const props = defineProps({
+    prefill: { type: Object, default: null },
+});
+
 const inputClass =
     'mt-1 w-full rounded-none border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 placeholder-zinc-600 focus:border-brand-500 focus:outline-none focus:ring-0';
 
 const form = useForm({
-    name: '',
+    name: props.prefill?.name || '',
     handle: '',
-    email: '',
+    email: props.prefill?.email || '',
     password: '',
-    bio: '',
+    bio: props.prefill?.bio || '',
+    application_id: props.prefill?.application_id || null,
 });
 
 const submit = () => form.post(route('admin.reviewers.store'));
@@ -21,7 +26,8 @@ const submit = () => form.post(route('admin.reviewers.store'));
 
     <AdminLayout>
         <h1 class="text-2xl font-bold">レビュワーを招待</h1>
-        <p class="mt-1 text-sm text-zinc-400">アカウントを作成します。ログイン情報を本人に共有してください。</p>
+        <p v-if="prefill" class="mt-1 text-sm text-zinc-400">申込みから作成中（申込みは承認済みに更新されます）</p>
+        <p v-else class="mt-1 text-sm text-zinc-400">アカウントを作成します。ログイン情報を本人に共有してください。</p>
 
         <form class="mt-6 max-w-lg space-y-5" @submit.prevent="submit">
             <div>
@@ -32,6 +38,7 @@ const submit = () => form.post(route('admin.reviewers.store'));
             <div>
                 <label class="block text-sm font-medium text-zinc-300">ハンドル（URL用・半角英数）<span class="text-brand-500">*</span></label>
                 <input v-model="form.handle" type="text" placeholder="aoi" :class="inputClass" />
+                <p v-if="prefill" class="mt-1 text-xs text-zinc-500">申込みのSUNO ID: {{ prefill.suno_id }}</p>
                 <p v-if="form.errors.handle" class="mt-1 text-sm text-red-400">{{ form.errors.handle }}</p>
             </div>
             <div>

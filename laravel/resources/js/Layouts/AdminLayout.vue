@@ -13,6 +13,7 @@ const items = [
     { label: 'レビュー依頼', name: 'admin.requests.index' },
     { label: '楽曲', name: 'admin.songs.index' },
     { label: 'レビュー', name: 'admin.reviews.index' },
+    { label: 'レビュワー申込み', name: 'admin.applications.index', adminOnly: true },
     { label: 'レビュワー', name: 'admin.reviewers.index', adminOnly: true },
 ];
 const nav = computed(() => items.filter((i) => route().has(i.name) && (! i.adminOnly || isAdmin.value)));

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\FeaturedController as AdminFeaturedController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\ReviewerApplicationController as AdminReviewerApplicationController;
 use App\Http\Controllers\Admin\ReviewerController as AdminReviewerController;
 use App\Http\Controllers\Admin\ReviewRequestController as AdminReviewRequestController;
 use App\Http\Controllers\Admin\SongController as AdminSongController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\GenreController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ReviewerApplicationController;
 use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\ReviewRequestController;
 use App\Http\Controllers\SearchController;
@@ -30,6 +32,9 @@ Route::get('/search', [SearchController::class, 'index'])->name('search');
 // レビュー依頼フォーム（必須要件）
 Route::get('/request', [ReviewRequestController::class, 'create'])->name('requests.create');
 Route::post('/request', [ReviewRequestController::class, 'store'])->name('requests.store');
+
+// レビュワー申込みフォーム（LP埋め込み）
+Route::post('/apply', [ReviewerApplicationController::class, 'store'])->name('applications.store');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -60,6 +65,9 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/reviews', [AdminReviewController::class, 'store'])->name('reviews.store');
     Route::get('/reviews/{review}/edit', [AdminReviewController::class, 'edit'])->name('reviews.edit');
     Route::put('/reviews/{review}', [AdminReviewController::class, 'update'])->name('reviews.update');
+
+    Route::get('/applications', [AdminReviewerApplicationController::class, 'index'])->name('applications.index');
+    Route::patch('/applications/{reviewerApplication}', [AdminReviewerApplicationController::class, 'update'])->name('applications.update');
 
     Route::get('/reviewers', [AdminReviewerController::class, 'index'])->name('reviewers.index');
     Route::get('/reviewers/create', [AdminReviewerController::class, 'create'])->name('reviewers.create');

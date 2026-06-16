@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ReviewerApplication;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,7 +30,24 @@ class ReviewerController extends Controller
     {
         abort_unless($request->user()->isAdmin(), 403);
 
-        return Inertia::render('Admin/Reviewers/Create');
+        $prefill = null;
+
+        if ($request->filled('application_id')) {
+            $application = ReviewerApplication::find($request->integer('application_id'));
+            if ($application) {
+                $prefill = [
+                    'application_id' => $application->id,
+                    'name' => $application->name,
+                    'email' => $application->email,
+                    'suno_id' => $application->suno_id,
+                    'bio' => $application->motivation,
+                ];
+            }
+        }
+
+        return Inertia::render('Admin/Reviewers/Create', [
+            'prefill' => $prefill,
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -42,9 +60,10 @@ class ReviewerController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
             'bio' => ['nullable', 'string', 'max:1000'],
+            'application_id' => ['nullable', 'integer', 'exists:reviewer_applications,id'],
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $data['name'],
             'handle' => $data['handle'],
             'email' => $data['email'],
@@ -52,6 +71,14 @@ class ReviewerController extends Controller
             'bio' => $data['bio'] ?? null,
             'role' => 'reviewer',
         ]);
+
+        if (! empty($data['application_id'])) {
+            ReviewerApplication::where('id', $data['application_id'])->update([
+                'status' => 'approved',
+                'reviewed_at' => now(),
+                'approved_user_id' => $user->id,
+            ]);
+        }
 
         return redirect()->route('admin.reviewers.index')->with('success', 'レビュワーを作成しました。');
     }

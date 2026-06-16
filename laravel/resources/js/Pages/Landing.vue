@@ -1,6 +1,7 @@
 <script setup>
 import LpLayout from '@/Layouts/LpLayout.vue';
 import RequestForm from '@/Components/RequestForm.vue';
+import ReviewerApplyForm from '@/Components/ReviewerApplyForm.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>
 
@@ -106,10 +107,24 @@ import { Head, Link } from '@inertiajs/vue3';
             </div>
         </section>
 
-        <!-- 06 FINAL CTA -->
+        <!-- 06 レビュワー募集 -->
+        <section id="apply" class="scroll-mt-16 border-b border-zinc-800">
+            <div class="mx-auto max-w-6xl px-4 py-20">
+                <div class="mx-auto max-w-2xl text-center">
+                    <div class="text-sm font-bold tracking-[0.2em] text-brand-500">06</div>
+                    <h2 class="mt-3 text-3xl font-bold leading-tight md:text-4xl">レビュワーを募集しています。</h2>
+                    <p class="mt-5 text-lg text-zinc-300">一緒にSUNOの名曲を見つけ、ストーリーを書く仲間を探しています。SUNOアカウントをお持ちの方ならどなたでも。</p>
+                </div>
+                <div class="mx-auto mt-10 max-w-2xl">
+                    <ReviewerApplyForm />
+                </div>
+            </div>
+        </section>
+
+        <!-- 07 FINAL CTA -->
         <section class="relative overflow-hidden">
             <div class="mx-auto max-w-4xl px-4 py-24 text-center">
-                <div class="text-sm font-bold tracking-[0.2em] text-brand-500">06</div>
+                <div class="text-sm font-bold tracking-[0.2em] text-brand-500">07</div>
                 <h2 class="mt-4 text-3xl font-bold leading-tight md:text-5xl">
                     一緒に、SUNOを。<br />AI音楽を、盛り上げよう。
                 </h2>
