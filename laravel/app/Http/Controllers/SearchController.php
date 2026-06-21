@@ -22,8 +22,8 @@ class SearchController extends Controller
                         ->orWhere('genre', 'like', "%{$q}%")
                         ->orWhere('tags', 'like', "%{$q}%");
                 })
-                ->withCount('reviews')
-                ->withAvg('reviews', 'overall_score')
+                ->withCount(['reviews' => fn ($r) => $r->published()])
+                ->withAvg(['reviews' => fn ($r) => $r->published()], 'overall_score')
                 ->latest('published_at')
                 ->get();
         }

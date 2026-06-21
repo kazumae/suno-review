@@ -39,6 +39,16 @@ class Song extends Model
 
     protected $appends = ['cover_url', 'suno_embed_url', 'youtube_embed_url'];
 
+    protected static function booted(): void
+    {
+        // 楽曲が非公開(published以外)に変わったら、紐づく公開中レビューも非公開にする
+        static::updated(function (Song $song) {
+            if ($song->wasChanged('status') && $song->status !== 'published') {
+                $song->reviews()->whereNotNull('published_at')->update(['published_at' => null]);
+            }
+        });
+    }
+
     public function submitter(): BelongsTo
     {
         return $this->belongsTo(User::class, 'submitted_by');

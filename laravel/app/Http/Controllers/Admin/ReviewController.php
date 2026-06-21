@@ -45,7 +45,9 @@ class ReviewController extends Controller
         $this->fill($review, $request, $data);
         $review->save();
 
-        return redirect()->route('admin.reviews.index')->with('success', 'レビューを公開しました。');
+        $message = $review->published_at ? 'レビューを公開しました。' : 'レビューを下書き保存しました。';
+
+        return redirect()->route('admin.reviews.index')->with('success', $message);
     }
 
     public function edit(Request $request, Review $review): Response
@@ -66,7 +68,9 @@ class ReviewController extends Controller
         $this->fill($review, $request, $data);
         $review->save();
 
-        return redirect()->route('admin.reviews.index')->with('success', 'レビューを更新しました。');
+        $message = $review->published_at ? 'レビューを更新しました。' : 'レビューを非公開にしました。';
+
+        return redirect()->route('admin.reviews.index')->with('success', $message);
     }
 
     private function songOptions()
@@ -104,9 +108,10 @@ class ReviewController extends Controller
         );
         $review->overall_score = count($scores) ? round(array_sum($scores) / count($scores), 2) : null;
 
-        if (! $review->published_at) {
-            $review->published_at = now();
-        }
+        // 公開状態: 「公開」は既存の公開日時を保持（なければ現在時刻）、「非公開」はnull
+        $review->published_at = $request->boolean('published')
+            ? ($review->published_at ?? now())
+            : null;
 
         if ($request->hasFile('cover')) {
             $review->cover_image_path = $request->file('cover')->store('covers');

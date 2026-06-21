@@ -12,8 +12,8 @@ class GenreController extends Controller
     {
         $songs = Song::published()
             ->where('genre', $genre)
-            ->withCount('reviews')
-            ->withAvg('reviews', 'overall_score')
+            ->withCount(['reviews' => fn ($q) => $q->published()])
+            ->withAvg(['reviews' => fn ($q) => $q->published()], 'overall_score')
             ->latest('published_at')
             ->get();
 
