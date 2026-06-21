@@ -1,6 +1,8 @@
 <script setup>
 import PublicLayout from '@/Layouts/PublicLayout.vue';
+import RequestNoticeModal from '@/Components/RequestNoticeModal.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const genres = ['City Pop', 'Lo-fi', 'Ballad', 'Rock', 'EDM', 'Ambient', 'HipHop', 'J-Pop', 'その他'];
 
@@ -16,7 +18,21 @@ const form = useForm({
     note: '',
 });
 
-const submit = () => form.post(route('requests.store'));
+const showNotice = ref(false);
+
+// HTML5バリデーション通過後に注意事項モーダルを表示する
+const openNotice = () => {
+    showNotice.value = true;
+};
+
+const submit = () => {
+    form.post(route('requests.store'), {
+        // 成功時はhomeへリダイレクト。エラー時はモーダルを閉じてフォーム上のエラーを見せる
+        onError: () => {
+            showNotice.value = false;
+        },
+    });
+};
 </script>
 
 <template>
@@ -29,7 +45,7 @@ const submit = () => form.post(route('requests.store'));
                 SUNOの楽曲URLを送ってください。編集部とレビュワーが聴いて、ストーリーを添えてレビューします。
             </p>
 
-            <form class="mt-8 space-y-5" @submit.prevent="submit">
+            <form class="mt-8 space-y-5" @submit.prevent="openNotice">
                 <div>
                     <label class="block text-sm font-medium text-zinc-300">
                         SUNO URL <span class="text-brand-500">*</span>
@@ -82,5 +98,12 @@ const submit = () => form.post(route('requests.store'));
                 </button>
             </form>
         </div>
+
+        <RequestNoticeModal
+            :show="showNotice"
+            :processing="form.processing"
+            @confirm="submit"
+            @cancel="showNotice = false"
+        />
     </PublicLayout>
 </template>
