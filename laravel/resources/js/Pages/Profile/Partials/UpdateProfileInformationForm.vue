@@ -1,112 +1,81 @@
 <script setup>
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
+import { useForm, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
-defineProps({
-    mustVerifyEmail: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
-});
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 
-const user = usePage().props.auth.user;
+const inputClass =
+    'mt-1 w-full rounded-none border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 placeholder-zinc-600 focus:border-brand-500 focus:outline-none focus:ring-0';
 
 const form = useForm({
-    name: user.name,
-    email: user.email,
+    name: user.value.name,
+    email: user.value.email,
 });
+
+const submit = () => form.patch(route('profile.update'), { preserveScroll: true });
+
+const resendForm = useForm({});
+const resend = () => resendForm.post(route('profile.email.resend'), { preserveScroll: true });
+
+const cancelForm = useForm({});
+const cancel = () => cancelForm.delete(route('profile.email.cancel'), { preserveScroll: true });
 </script>
 
 <template>
     <section>
         <header>
-            <h2 class="text-lg font-medium text-gray-900">
-                Profile Information
-            </h2>
-
-            <p class="mt-1 text-sm text-gray-600">
-                Update your account's profile information and email address.
-            </p>
+            <h2 class="text-lg font-semibold">プロフィール</h2>
+            <p class="mt-1 text-sm text-zinc-400">名前とログイン用メールアドレスを変更できます。</p>
         </header>
 
-        <form
-            @submit.prevent="form.patch(route('profile.update'))"
-            class="mt-6 space-y-6"
-        >
+        <form class="mt-6 max-w-lg space-y-5" @submit.prevent="submit">
             <div>
-                <InputLabel for="name" value="Name" />
-
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
-
-                <InputError class="mt-2" :message="form.errors.name" />
+                <label class="block text-sm font-medium text-zinc-300">名前 <span class="text-brand-500">*</span></label>
+                <input v-model="form.name" type="text" autocomplete="name" :class="inputClass" />
+                <p v-if="form.errors.name" class="mt-1 text-sm text-red-400">{{ form.errors.name }}</p>
             </div>
 
             <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div v-if="mustVerifyEmail && user.email_verified_at === null">
-                <p class="mt-2 text-sm text-gray-800">
-                    Your email address is unverified.
-                    <Link
-                        :href="route('verification.send')"
-                        method="post"
-                        as="button"
-                        class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                        Click here to re-send the verification email.
-                    </Link>
+                <label class="block text-sm font-medium text-zinc-300">メールアドレス <span class="text-brand-500">*</span></label>
+                <input v-model="form.email" type="email" autocomplete="username" :class="inputClass" />
+                <p v-if="form.errors.email" class="mt-1 text-sm text-red-400">{{ form.errors.email }}</p>
+                <p class="mt-1 text-xs text-zinc-500">
+                    変更すると新しいアドレス宛に確認メールを送ります。リンクを開くまでは現在のアドレスでログインできます。
                 </p>
+            </div>
 
-                <div
-                    v-show="status === 'verification-link-sent'"
-                    class="mt-2 text-sm font-medium text-green-600"
-                >
-                    A new verification link has been sent to your email address.
+            <div v-if="user.pending_email" class="border border-brand-500/40 bg-brand-500/10 px-4 py-3 text-sm">
+                <p class="text-brand-200">
+                    <span class="font-semibold">{{ user.pending_email }}</span> への変更を確認中です。届いたメールのリンクを開くと完了します。
+                </p>
+                <div class="mt-2 flex items-center gap-4">
+                    <button
+                        type="button"
+                        :disabled="resendForm.processing"
+                        class="text-brand-300 underline transition hover:text-brand-200 disabled:opacity-50"
+                        @click="resend"
+                    >
+                        確認メールを再送
+                    </button>
+                    <button
+                        type="button"
+                        :disabled="cancelForm.processing"
+                        class="text-zinc-400 underline transition hover:text-zinc-200 disabled:opacity-50"
+                        @click="cancel"
+                    >
+                        変更を取り消す
+                    </button>
                 </div>
             </div>
 
-            <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
-
-                <Transition
-                    enter-active-class="transition ease-in-out"
-                    enter-from-class="opacity-0"
-                    leave-active-class="transition ease-in-out"
-                    leave-to-class="opacity-0"
-                >
-                    <p
-                        v-if="form.recentlySuccessful"
-                        class="text-sm text-gray-600"
-                    >
-                        Saved.
-                    </p>
-                </Transition>
-            </div>
+            <button
+                type="submit"
+                :disabled="form.processing"
+                class="rounded-full bg-brand-500 px-6 py-3 font-semibold text-black transition hover:bg-brand-400 disabled:opacity-50"
+            >
+                保存する
+            </button>
         </form>
     </section>
 </template>

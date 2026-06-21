@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\VerifyNewEmail;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -16,48 +14,44 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): Response
+    public function edit(): Response
     {
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
-        ]);
+        return Inertia::render('Profile/Edit');
     }
 
     /**
      * Update the user's profile information.
+     *
+     * 名前は即時更新。メールアドレスは保留方式: emailは切り替えず pending_email に保存し、
+     * 新アドレス宛の確認リンクを踏んで初めて確定する。
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->name = $validated['name'];
+
+        $newEmail = $validated['email'];
+        $emailChanged = $newEmail !== $user->email;
+
+        if ($emailChanged) {
+            $user->pending_email = $newEmail;
+        } elseif (filled($user->pending_email)) {
+            // メールアドレスを現在の値に戻した場合は保留中の変更を取り消す
+            $user->pending_email = null;
         }
 
-        $request->user()->save();
+        $user->save();
 
-        return Redirect::route('profile.edit');
-    }
+        if ($emailChanged) {
+            $user->notify(new VerifyNewEmail($newEmail));
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'password' => ['required', 'current_password'],
-        ]);
+            return Redirect::route('profile.edit')
+                ->with('success', $newEmail.' に確認メールを送信しました。記載のリンクを開くとメールアドレスの変更が完了します。');
+        }
 
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return Redirect::route('profile.edit')
+            ->with('success', 'プロフィールを更新しました。');
     }
 }
