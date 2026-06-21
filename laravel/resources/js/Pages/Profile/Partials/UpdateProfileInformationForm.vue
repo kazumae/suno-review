@@ -1,6 +1,6 @@
 <script setup>
 import { useForm, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -11,9 +11,22 @@ const inputClass =
 const form = useForm({
     name: user.value.name,
     email: user.value.email,
+    suno_url: user.value.suno_url || '',
+    avatar: null,
 });
 
-const submit = () => form.patch(route('profile.update'), { preserveScroll: true });
+const avatarPreview = ref(null);
+const onAvatar = (e) => {
+    const file = e.target.files[0] || null;
+    form.avatar = file;
+    avatarPreview.value = file ? URL.createObjectURL(file) : null;
+};
+
+// ファイルを含むため method spoofing で multipart 送信する
+const submit = () =>
+    form
+        .transform((d) => ({ ...d, _method: 'patch' }))
+        .post(route('profile.update'), { preserveScroll: true, forceFormData: true });
 
 const resendForm = useForm({});
 const resend = () => resendForm.post(route('profile.email.resend'), { preserveScroll: true });
@@ -30,6 +43,22 @@ const cancel = () => cancelForm.delete(route('profile.email.cancel'), { preserve
         </header>
 
         <form class="mt-6 max-w-lg space-y-5" @submit.prevent="submit">
+            <div>
+                <label class="block text-sm font-medium text-zinc-300">アイコン</label>
+                <div class="mt-2 flex items-center gap-4">
+                    <div class="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden bg-zinc-800 text-2xl font-bold text-zinc-500 ring-1 ring-zinc-700">
+                        <img v-if="avatarPreview || user.avatar_url" :src="avatarPreview || user.avatar_url" alt="" class="h-full w-full object-cover" />
+                        <span v-else>{{ user.name?.charAt(0) }}</span>
+                    </div>
+                    <div class="text-sm">
+                        <input type="file" accept="image/*" class="block text-zinc-400 file:mr-3 file:border-0 file:bg-zinc-800 file:px-3 file:py-2 file:text-zinc-200" @change="onAvatar" />
+                        <p class="mt-1 text-xs text-zinc-500">正方形・2MBまで。記事やプロフィールの著者表示に使われます。</p>
+                    </div>
+                </div>
+                <p v-if="form.progress" class="mt-1 text-xs text-zinc-500">アップロード中 {{ form.progress.percentage }}%</p>
+                <p v-if="form.errors.avatar" class="mt-1 text-sm text-red-400">{{ form.errors.avatar }}</p>
+            </div>
+
             <div>
                 <label class="block text-sm font-medium text-zinc-300">名前 <span class="text-brand-500">*</span></label>
                 <input v-model="form.name" type="text" autocomplete="name" :class="inputClass" />
@@ -67,6 +96,13 @@ const cancel = () => cancelForm.delete(route('profile.email.cancel'), { preserve
                         変更を取り消す
                     </button>
                 </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-zinc-300">SUNOアカウント（任意）</label>
+                <input v-model="form.suno_url" type="url" placeholder="https://suno.com/@yourname" :class="inputClass" />
+                <p class="mt-1 text-xs text-zinc-500">あなたのSUNOプロフィールURL。レビュワーページからリンクします。</p>
+                <p v-if="form.errors.suno_url" class="mt-1 text-sm text-red-400">{{ form.errors.suno_url }}</p>
             </div>
 
             <button

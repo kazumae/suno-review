@@ -19,7 +19,7 @@ class ReviewerController extends Controller
             ->get();
 
         return Inertia::render('Reviewers/Show', [
-            'reviewer' => $user->only(['id', 'name', 'handle', 'bio', 'avatar_path']),
+            'reviewer' => $user->only(['id', 'name', 'handle', 'bio', 'avatar_url', 'suno_url']),
             'reviews' => $reviews,
         ]);
     }

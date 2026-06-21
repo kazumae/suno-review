@@ -6,7 +6,9 @@ use App\Models\User;
 use App\Notifications\VerifyNewEmail;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
@@ -200,5 +202,75 @@ class ProfileTest extends TestCase
             'old@example.com',
             $user->routeNotificationForMail(new ResetPassword('token'))
         );
+    }
+
+    public function test_avatar_can_be_uploaded(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->patch('/profile', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'avatar' => UploadedFile::fake()->create('avatar.jpg', 100, 'image/jpeg'),
+        ]);
+
+        $response->assertSessionHasNoErrors()->assertRedirect('/profile');
+
+        $user->refresh();
+        $this->assertNotNull($user->avatar_path);
+        Storage::disk('public')->assertExists($user->avatar_path);
+    }
+
+    public function test_uploading_a_new_avatar_replaces_the_old_one(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->patch('/profile', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'avatar' => UploadedFile::fake()->create('first.jpg', 100, 'image/jpeg'),
+        ]);
+        $old = $user->refresh()->avatar_path;
+
+        $this->actingAs($user)->patch('/profile', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'avatar' => UploadedFile::fake()->create('second.jpg', 100, 'image/jpeg'),
+        ]);
+        $new = $user->refresh()->avatar_path;
+
+        $this->assertNotSame($old, $new);
+        Storage::disk('public')->assertMissing($old);
+        Storage::disk('public')->assertExists($new);
+    }
+
+    public function test_suno_url_can_be_updated(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->patch('/profile', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'suno_url' => 'https://suno.com/@me',
+        ])->assertSessionHasNoErrors();
+
+        $this->assertSame('https://suno.com/@me', $user->refresh()->suno_url);
+    }
+
+    public function test_invalid_suno_url_is_rejected(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->patch('/profile', [
+            'name' => $user->name,
+            'email' => $user->email,
+            'suno_url' => 'not-a-url',
+        ])->assertSessionHasErrors('suno_url');
+
+        $this->assertNull($user->refresh()->suno_url);
     }
 }
