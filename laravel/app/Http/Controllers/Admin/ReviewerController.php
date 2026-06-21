@@ -7,6 +7,8 @@ use App\Models\ReviewerApplication;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -81,5 +83,49 @@ class ReviewerController extends Controller
         }
 
         return redirect()->route('admin.reviewers.index')->with('success', 'レビュワーを作成しました。');
+    }
+
+    public function edit(Request $request, User $reviewer): Response
+    {
+        abort_unless($request->user()->isAdmin(), 403);
+        abort_unless($reviewer->isReviewer() || $reviewer->isAdmin(), 404);
+
+        $reviewer->loadCount('reviews');
+
+        return Inertia::render('Admin/Reviewers/Edit', [
+            'reviewer' => $reviewer,
+        ]);
+    }
+
+    public function update(Request $request, User $reviewer): RedirectResponse
+    {
+        abort_unless($request->user()->isAdmin(), 403);
+        abort_unless($reviewer->isReviewer() || $reviewer->isAdmin(), 404);
+
+        $data = $request->validate([
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($reviewer->id)],
+            'role' => ['required', Rule::in(['reviewer', 'admin'])],
+        ]);
+
+        $reviewer->email = $data['email'];
+        $reviewer->role = $data['role'];
+        $reviewer->pending_email = null;
+        $reviewer->save();
+
+        return back()->with('success', 'メールアドレス・権限を更新しました。');
+    }
+
+    public function updatePassword(Request $request, User $reviewer): RedirectResponse
+    {
+        abort_unless($request->user()->isAdmin(), 403);
+        abort_unless($reviewer->isReviewer() || $reviewer->isAdmin(), 404);
+
+        $data = $request->validate([
+            'password' => ['required', 'confirmed', 'string', 'min:8'],
+        ]);
+
+        $reviewer->update(['password' => Hash::make($data['password'])]);
+
+        return back()->with('success', 'パスワードを変更しました。');
     }
 }
