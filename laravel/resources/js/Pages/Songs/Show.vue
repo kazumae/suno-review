@@ -85,8 +85,9 @@ defineProps({
                 <div v-if="song.reviews?.length" class="space-y-5">
                     <article v-for="review in song.reviews" :key="review.id" class="bg-zinc-900 p-5 ring-1 ring-zinc-800">
                         <div class="flex items-center gap-3">
-                            <div class="h-9 w-9 overflow-hidden bg-zinc-800">
-                                <img v-if="review.reviewer?.avatar_path" :src="review.reviewer.avatar_path" class="h-full w-full object-cover" />
+                            <div class="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden bg-zinc-800 text-sm font-bold text-zinc-500">
+                                <img v-if="review.reviewer?.avatar_url" :src="review.reviewer.avatar_url" :alt="review.reviewer?.name" class="h-full w-full object-cover" />
+                                <span v-else>{{ review.reviewer?.name?.charAt(0) }}</span>
                             </div>
                             <div class="text-sm">
                                 <Link v-if="review.reviewer?.handle" :href="route('reviewers.show', review.reviewer.handle)" class="font-semibold transition hover:text-brand-400">
