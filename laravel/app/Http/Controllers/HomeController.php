@@ -12,8 +12,8 @@ class HomeController extends Controller
     {
         // ランキング: 編集部ピック → レビュー平均点 → 閲覧数
         $ranking = Song::published()
-            ->withCount('reviews')
-            ->withAvg('reviews', 'overall_score')
+            ->withCount(['reviews' => fn ($q) => $q->published()])
+            ->withAvg(['reviews' => fn ($q) => $q->published()], 'overall_score')
             ->orderByDesc('is_featured')
             ->orderByDesc('reviews_avg_overall_score')
             ->orderByDesc('view_count')
@@ -22,14 +22,14 @@ class HomeController extends Controller
 
         // 新着
         $latest = Song::published()
-            ->withCount('reviews')
+            ->withCount(['reviews' => fn ($q) => $q->published()])
             ->latest('published_at')
             ->take(8)
             ->get();
 
         // ジャンル別
         $genres = Song::published()
-            ->withCount('reviews')
+            ->withCount(['reviews' => fn ($q) => $q->published()])
             ->latest('published_at')
             ->get()
             ->groupBy('genre')
@@ -42,8 +42,8 @@ class HomeController extends Controller
         // メインビジュアル: 編集部が指定したスロット(1-4)を優先、空きはランキング上位で補完
         $curated = Song::published()
             ->whereNotNull('featured_position')
-            ->withCount('reviews')
-            ->withAvg('reviews', 'overall_score')
+            ->withCount(['reviews' => fn ($q) => $q->published()])
+            ->withAvg(['reviews' => fn ($q) => $q->published()], 'overall_score')
             ->orderBy('featured_position')
             ->get()
             ->keyBy('featured_position');

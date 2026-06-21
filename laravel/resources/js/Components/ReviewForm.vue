@@ -20,6 +20,8 @@ const form = useForm({
     score_production: src.score_production || '',
     score_originality: src.score_originality || '',
     cover: null,
+    // 新規は公開、編集は現状の公開状態を引き継ぐ
+    published: isEdit ? !! src.published_at : true,
 });
 
 const scoreFields = [
@@ -89,6 +91,15 @@ const submit = () => {
             <input type="file" accept="image/*" class="mt-2 block text-sm text-zinc-400 file:mr-3 file:border-0 file:bg-zinc-800 file:px-3 file:py-2 file:text-zinc-200" @change="onFile" />
             <p v-if="form.progress" class="mt-1 text-xs text-zinc-500">アップロード中 {{ form.progress.percentage }}%</p>
             <p v-if="form.errors.cover" class="mt-1 text-sm text-red-400">{{ form.errors.cover }}</p>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-zinc-300">公開状態</label>
+            <select v-model="form.published" :class="inputClass">
+                <option :value="true">公開</option>
+                <option :value="false">非公開（下書き）</option>
+            </select>
+            <p class="mt-1 text-xs text-zinc-500">非公開にすると公開ページ・ランキングから見えなくなります。</p>
         </div>
 
         <button

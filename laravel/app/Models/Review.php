@@ -38,6 +38,11 @@ class Review extends Model
         return 'slug';
     }
 
+    public function scopePublished($query)
+    {
+        return $query->whereNotNull('published_at');
+    }
+
     public function song(): BelongsTo
     {
         return $this->belongsTo(Song::class);
