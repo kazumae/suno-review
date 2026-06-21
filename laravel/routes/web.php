@@ -82,6 +82,9 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/reviewers', [AdminReviewerController::class, 'index'])->name('reviewers.index');
     Route::get('/reviewers/create', [AdminReviewerController::class, 'create'])->name('reviewers.create');
     Route::post('/reviewers', [AdminReviewerController::class, 'store'])->name('reviewers.store');
+    Route::get('/reviewers/{reviewer}/edit', [AdminReviewerController::class, 'edit'])->name('reviewers.edit');
+    Route::put('/reviewers/{reviewer}', [AdminReviewerController::class, 'update'])->name('reviewers.update');
+    Route::put('/reviewers/{reviewer}/password', [AdminReviewerController::class, 'updatePassword'])->name('reviewers.password.update');
 });
 
 if (app()->environment('local')) {

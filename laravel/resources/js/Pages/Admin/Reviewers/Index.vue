@@ -27,6 +27,7 @@ defineProps({
                         <th class="p-3 font-medium">メール</th>
                         <th class="p-3 font-medium">権限</th>
                         <th class="p-3 font-medium">レビュー数</th>
+                        <th class="p-3 font-medium"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-zinc-800">
@@ -39,9 +40,12 @@ defineProps({
                         <td class="p-3 text-zinc-400">{{ r.email }}</td>
                         <td class="p-3 text-zinc-400">{{ r.role === 'admin' ? '管理者' : 'レビュワー' }}</td>
                         <td class="p-3 text-zinc-400">{{ r.reviews_count }}</td>
+                        <td class="p-3">
+                            <Link :href="route('admin.reviewers.edit', r.id)" class="text-xs text-zinc-400 hover:text-brand-400">編集</Link>
+                        </td>
                     </tr>
                     <tr v-if="! reviewers.length">
-                        <td colspan="5" class="p-4 text-zinc-500">レビュワーがいません。</td>
+                        <td colspan="6" class="p-4 text-zinc-500">レビュワーがいません。</td>
                     </tr>
                 </tbody>
             </table>
