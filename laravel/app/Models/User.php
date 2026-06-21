@@ -12,13 +12,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Storage;
 
-#[Fillable(['name', 'email', 'password', 'role', 'handle', 'bio', 'avatar_path'])]
+#[Fillable(['name', 'email', 'password', 'role', 'handle', 'bio', 'avatar_path', 'suno_url'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    /**
+     * @var list<string>
+     */
+    protected $appends = ['avatar_url'];
 
     /**
      * Get the attributes that should be cast.
@@ -63,5 +69,19 @@ class User extends Authenticatable
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class, 'reviewer_id');
+    }
+
+    /**
+     * アバター画像のURL。S3など外部URLはそのまま、ローカル保存パスは Storage::url で解決する。
+     */
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if (! $this->avatar_path) {
+            return null;
+        }
+
+        return str_starts_with($this->avatar_path, 'http')
+            ? $this->avatar_path
+            : Storage::url($this->avatar_path);
     }
 }

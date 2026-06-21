@@ -6,6 +6,7 @@ use App\Http\Requests\ProfileUpdateRequest;
 use App\Notifications\VerifyNewEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -31,6 +32,15 @@ class ProfileController extends Controller
         $validated = $request->validated();
 
         $user->name = $validated['name'];
+        $user->suno_url = $validated['suno_url'] ?? null;
+
+        if ($request->hasFile('avatar')) {
+            // 旧アバターがローカル保存なら削除（S3など外部URLは対象外）
+            if ($user->avatar_path && ! str_starts_with($user->avatar_path, 'http')) {
+                Storage::delete($user->avatar_path);
+            }
+            $user->avatar_path = $request->file('avatar')->store('avatars');
+        }
 
         $newEmail = $validated['email'];
         $emailChanged = $newEmail !== $user->email;
