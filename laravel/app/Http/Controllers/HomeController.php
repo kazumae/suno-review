@@ -10,10 +10,11 @@ class HomeController extends Controller
 {
     public function index(): Response
     {
-        // ランキング: 編集部ピック → レビュー平均点 → 閲覧数
+        // ランキング: スコア付きレビューがある楽曲のみ対象
         $ranking = Song::published()
             ->withCount(['reviews' => fn ($q) => $q->published()])
-            ->withAvg(['reviews' => fn ($q) => $q->published()], 'overall_score')
+            ->withAvg(['reviews' => fn ($q) => $q->published()->where('overall_score', '>', 0)], 'overall_score')
+            ->whereHas('reviews', fn ($q) => $q->published()->where('overall_score', '>', 0))
             ->orderByDesc('is_featured')
             ->orderByDesc('reviews_avg_overall_score')
             ->orderByDesc('view_count')
