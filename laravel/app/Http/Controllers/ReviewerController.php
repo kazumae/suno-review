@@ -8,6 +8,28 @@ use Inertia\Response;
 
 class ReviewerController extends Controller
 {
+    public function index(): Response
+    {
+        $reviewers = User::query()
+            ->whereIn('role', ['reviewer', 'admin'])
+            ->whereNotNull('handle')
+            ->whereHas('reviews', fn ($q) => $q->whereNotNull('published_at'))
+            ->withCount(['reviews' => fn ($q) => $q->whereNotNull('published_at')])
+            ->orderByDesc('reviews_count')
+            ->orderBy('name')
+            ->get();
+
+        return Inertia::render('Reviewers/Index', [
+            'reviewers' => $reviewers->map(fn (User $u) => [
+                'name' => $u->name,
+                'handle' => $u->handle,
+                'bio' => $u->bio,
+                'avatar_url' => $u->avatar_url,
+                'reviews_count' => $u->reviews_count,
+            ]),
+        ]);
+    }
+
     public function show(User $user): Response
     {
         abort_unless($user->isReviewer(), 404);

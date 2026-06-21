@@ -26,6 +26,7 @@ Route::get('/lp', fn () => Inertia::render('Landing'))->name('landing');
 
 Route::get('/songs/{song}', [SongController::class, 'show'])->name('songs.show');
 Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
+Route::get('/reviewers', [ReviewerController::class, 'index'])->name('reviewers.index');
 Route::get('/reviewers/{user:handle}', [ReviewerController::class, 'show'])->name('reviewers.show');
 Route::get('/genres/{genre}', [GenreController::class, 'show'])->name('genres.show');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
