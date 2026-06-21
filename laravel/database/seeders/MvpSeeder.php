@@ -83,9 +83,6 @@ class MvpSeeder extends Seeder
 
         foreach (array_slice($created, 0, 6) as $i => $song) {
             $reviewer = $reviewers[$i % $reviewers->count()];
-            $scores = [
-                'm' => rand(3, 5), 'l' => rand(3, 5), 'p' => rand(3, 5), 'o' => rand(3, 5),
-            ];
             Review::create([
                 'song_id' => $song->id,
                 'reviewer_id' => $reviewer->id,
@@ -93,11 +90,7 @@ class MvpSeeder extends Seeder
                 'slug' => (Str::slug($reviewTitles[$i]) ?: 'review').'-'.Str::lower(Str::random(6)),
                 'body' => $reviewBodies[$i],
                 'cover_image_path' => "https://picsum.photos/seed/suno-review-{$i}/1200/630",
-                'score_melody' => $scores['m'],
-                'score_lyrics' => $scores['l'],
-                'score_production' => $scores['p'],
-                'score_originality' => $scores['o'],
-                'overall_score' => round(array_sum($scores) / 4, 2),
+                'overall_score' => rand(60, 95),
                 'published_at' => now()->subDays($i)->addHours(6),
             ]);
         }

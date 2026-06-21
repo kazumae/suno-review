@@ -40,7 +40,7 @@ defineProps({
                         <td class="p-3 font-medium">{{ review.title }}</td>
                         <td class="p-3 text-zinc-400">{{ review.song?.title }}</td>
                         <td class="p-3 text-zinc-400">{{ review.reviewer?.name }}</td>
-                        <td class="p-3 text-brand-400">{{ review.overall_score ? Number(review.overall_score).toFixed(1) : '—' }}</td>
+                        <td class="p-3 text-brand-400">{{ review.overall_score != null ? review.overall_score : '—' }}</td>
                         <td class="p-3">
                             <span :class="review.published_at ? 'text-brand-400' : 'text-zinc-500'">
                                 {{ review.published_at ? '公開' : '非公開' }}

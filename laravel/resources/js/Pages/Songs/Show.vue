@@ -93,7 +93,7 @@ defineProps({
                                     {{ review.reviewer?.name }}
                                 </Link>
                                 <span v-else class="font-semibold">{{ review.reviewer?.name }}</span>
-                                <span class="ml-2 text-brand-400">{{ Number(review.overall_score).toFixed(1) }}</span>
+                                <span class="ml-2 text-brand-400">{{ review.overall_score }}</span>
                             </div>
                         </div>
                         <h3 class="mt-3 text-lg font-bold">

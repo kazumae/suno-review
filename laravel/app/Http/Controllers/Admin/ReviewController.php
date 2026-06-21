@@ -84,10 +84,7 @@ class ReviewController extends Controller
             'song_id' => ['required', 'exists:songs,id'],
             'title' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
-            'score_melody' => ['nullable', 'integer', 'between:1,5'],
-            'score_lyrics' => ['nullable', 'integer', 'between:1,5'],
-            'score_production' => ['nullable', 'integer', 'between:1,5'],
-            'score_originality' => ['nullable', 'integer', 'between:1,5'],
+            'overall_score' => ['nullable', 'integer', 'between:0,100'],
             'cover' => ['nullable', 'image', 'max:5120'],
         ]);
     }
@@ -97,16 +94,7 @@ class ReviewController extends Controller
         $review->song_id = $data['song_id'];
         $review->title = $data['title'];
         $review->body = $data['body'];
-
-        foreach (['score_melody', 'score_lyrics', 'score_production', 'score_originality'] as $k) {
-            $review->$k = $data[$k] ?? null;
-        }
-
-        $scores = array_filter(
-            [$review->score_melody, $review->score_lyrics, $review->score_production, $review->score_originality],
-            fn ($v) => $v !== null
-        );
-        $review->overall_score = count($scores) ? round(array_sum($scores) / count($scores), 2) : null;
+        $review->overall_score = isset($data['overall_score']) ? (int) $data['overall_score'] : null;
 
         // 公開状態: 「公開」は既存の公開日時を保持（なければ現在時刻）、「非公開」はnull
         $review->published_at = $request->boolean('published')

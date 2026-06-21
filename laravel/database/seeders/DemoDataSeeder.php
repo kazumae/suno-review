@@ -96,7 +96,6 @@ class DemoDataSeeder extends Seeder
                 }
                 $used[] = $reviewer->id;
 
-                $sc = ['m' => rand(2, 5), 'l' => rand(2, 5), 'p' => rand(3, 5), 'o' => rand(2, 5)];
                 $rt = $reviewTitles[($i + $j) % count($reviewTitles)];
 
                 Review::create([
@@ -106,11 +105,7 @@ class DemoDataSeeder extends Seeder
                     'slug' => (Str::slug($rt) ?: 'review').'-'.Str::lower(Str::random(6)),
                     'body' => $bodies[($i + $j) % count($bodies)],
                     'cover_image_path' => rand(0, 1) ? "https://picsum.photos/seed/sunorev{$i}-{$j}/1200/630" : null,
-                    'score_melody' => $sc['m'],
-                    'score_lyrics' => $sc['l'],
-                    'score_production' => $sc['p'],
-                    'score_originality' => $sc['o'],
-                    'overall_score' => round(($sc['m'] + $sc['l'] + $sc['p'] + $sc['o']) / 4, 2),
+                    'overall_score' => rand(50, 98),
                     'published_at' => $song->published_at->copy()->addHours(rand(2, 72)),
                 ]);
             }

@@ -42,7 +42,7 @@ defineProps({
                     <div class="min-w-0">
                         <div class="truncate font-semibold">{{ review.title }}</div>
                         <div class="truncate text-sm text-zinc-400">{{ review.song?.title }} / {{ review.song?.artist_name }}</div>
-                        <div class="mt-1 text-xs text-brand-400">{{ Number(review.overall_score).toFixed(1) }}</div>
+                        <div v-if="review.overall_score != null" class="mt-1 text-xs text-brand-400">{{ review.overall_score }}</div>
                     </div>
                 </Link>
                 <p v-if="!reviews.length" class="text-zinc-500">まだレビューがありません。</p>
