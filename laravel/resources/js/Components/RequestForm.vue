@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
+import RequestNoticeModal from '@/Components/RequestNoticeModal.vue';
 
 const done = ref(false);
+const showNotice = ref(false);
 
 const genres = ['City Pop', 'Lo-fi', 'Ballad', 'Rock', 'EDM', 'Ambient', 'HipHop', 'J-Pop', 'その他'];
 
@@ -19,12 +21,21 @@ const form = useForm({
     inline: true,
 });
 
+// HTML5バリデーション通過後に注意事項モーダルを表示する
+const openNotice = () => {
+    showNotice.value = true;
+};
+
 const submit = () => {
     form.post(route('requests.store'), {
         preserveScroll: true,
         onSuccess: () => {
             done.value = true;
             form.reset();
+            showNotice.value = false;
+        },
+        onError: () => {
+            showNotice.value = false;
         },
     });
 };
@@ -37,7 +48,7 @@ const submit = () => {
             <p class="mt-3 text-zinc-400">編集部とレビュワーが確認します。レビュー公開まで少しお待ちください。</p>
         </div>
 
-        <form v-else class="space-y-4" @submit.prevent="submit">
+        <form v-else class="space-y-4" @submit.prevent="openNotice">
             <div>
                 <label class="block text-sm font-medium text-zinc-300">SUNO URL <span class="text-brand-500">*</span></label>
                 <input v-model="form.suno_url" type="url" required placeholder="https://suno.com/song/... または共有リンク" :class="inputClass" />
@@ -85,5 +96,12 @@ const submit = () => {
                 {{ form.processing ? '送信中…' : 'レビューを依頼する' }}
             </button>
         </form>
+
+        <RequestNoticeModal
+            :show="showNotice"
+            :processing="form.processing"
+            @confirm="submit"
+            @cancel="showNotice = false"
+        />
     </div>
 </template>
