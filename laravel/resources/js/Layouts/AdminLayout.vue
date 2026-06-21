@@ -4,7 +4,8 @@ import { computed } from 'vue';
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
-const flash = computed(() => page.props.flash?.success);
+const flashSuccess = computed(() => page.props.flash?.success);
+const flashError = computed(() => page.props.flash?.error);
 const isAdmin = computed(() => user.value?.role === 'admin');
 
 const items = [
@@ -46,12 +47,21 @@ const logout = () => router.post(route('logout'));
             <header class="flex h-16 items-center gap-4 border-b border-zinc-800 px-5">
                 <Link :href="route('home')" class="text-sm text-zinc-400 transition hover:text-white">← サイトを見る</Link>
                 <div class="ml-auto flex items-center gap-4 text-sm">
-                    <span class="text-zinc-400">{{ user?.name }}（{{ isAdmin ? '管理者' : 'レビュワー' }}）</span>
+                    <Link
+                        :href="route('profile.edit')"
+                        :class="[
+                            'transition hover:text-white',
+                            route().current('profile.edit') ? 'text-white' : 'text-zinc-400',
+                        ]"
+                    >
+                        {{ user?.name }}（{{ isAdmin ? '管理者' : 'レビュワー' }}）
+                    </Link>
                     <button class="text-zinc-400 transition hover:text-white" @click="logout">ログアウト</button>
                 </div>
             </header>
 
-            <div v-if="flash" class="border-b border-brand-500/30 bg-brand-500/10 px-5 py-3 text-sm text-brand-300">{{ flash }}</div>
+            <div v-if="flashSuccess" class="border-b border-brand-500/30 bg-brand-500/10 px-5 py-3 text-sm text-brand-300">{{ flashSuccess }}</div>
+            <div v-if="flashError" class="border-b border-red-500/30 bg-red-500/10 px-5 py-3 text-sm text-red-300">{{ flashError }}</div>
 
             <main class="flex-1 p-5 md:p-8">
                 <slot />

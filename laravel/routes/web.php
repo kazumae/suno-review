@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ReviewerApplicationController as AdminReviewerApp
 use App\Http\Controllers\Admin\ReviewerController as AdminReviewerController;
 use App\Http\Controllers\Admin\ReviewRequestController as AdminReviewRequestController;
 use App\Http\Controllers\Admin\SongController as AdminSongController;
+use App\Http\Controllers\Auth\EmailChangeController;
 use App\Http\Controllers\DevLoginController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\HomeController;
@@ -43,7 +44,16 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // メールアドレス変更（保留方式）: 新アドレス宛の署名付きリンクで確定・再送・取消
+    Route::get('/profile/email/verify/{id}/{hash}', [EmailChangeController::class, 'verify'])
+        ->middleware('signed')
+        ->name('profile.email.verify');
+    Route::post('/profile/email/resend', [EmailChangeController::class, 'resend'])
+        ->middleware('throttle:6,1')
+        ->name('profile.email.resend');
+    Route::delete('/profile/email', [EmailChangeController::class, 'cancel'])
+        ->name('profile.email.cancel');
 });
 
 // バックステージ（レビュワー/管理者のみ）
