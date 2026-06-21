@@ -55,7 +55,7 @@ defineProps({
                             v-if="song.reviews_avg_overall_score"
                             class="shrink-0 border border-brand-500/50 px-1.5 py-0.5 text-xs font-semibold text-brand-400"
                         >
-                            {{ Number(song.reviews_avg_overall_score).toFixed(1) }}
+                            {{ Math.round(Number(song.reviews_avg_overall_score)) }}
                         </span>
                     </Link>
                 </div>

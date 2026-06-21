@@ -18,17 +18,13 @@ class Review extends Model
         'slug',
         'body',
         'cover_image_path',
-        'score_melody',
-        'score_lyrics',
-        'score_production',
-        'score_originality',
         'overall_score',
         'published_at',
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
-        'overall_score' => 'decimal:2',
+        'overall_score' => 'integer',
     ];
 
     protected $appends = ['cover_url'];

@@ -15,21 +15,11 @@ const form = useForm({
     song_id: src.song_id || props.songId || '',
     title: src.title || '',
     body: src.body || '',
-    score_melody: src.score_melody || '',
-    score_lyrics: src.score_lyrics || '',
-    score_production: src.score_production || '',
-    score_originality: src.score_originality || '',
+    overall_score: src.overall_score ?? '',
     cover: null,
     // 新規は公開、編集は現状の公開状態を引き継ぐ
     published: isEdit ? !! src.published_at : true,
 });
-
-const scoreFields = [
-    { key: 'score_melody', label: 'メロディ' },
-    { key: 'score_lyrics', label: '歌詞' },
-    { key: 'score_production', label: 'プロダクション' },
-    { key: 'score_originality', label: '独自性' },
-];
 
 const inputClass =
     'mt-1 w-full rounded-none border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 placeholder-zinc-600 focus:border-brand-500 focus:outline-none focus:ring-0';
@@ -65,16 +55,16 @@ const submit = () => {
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-zinc-300">スコア（各5点満点・任意）</label>
-            <div class="mt-1 grid grid-cols-2 gap-4">
-                <div v-for="f in scoreFields" :key="f.key">
-                    <label class="block text-xs text-zinc-400">{{ f.label }}</label>
-                    <select v-model="form[f.key]" :class="inputClass">
-                        <option value="">—</option>
-                        <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
-                    </select>
-                </div>
-            </div>
+            <label class="block text-sm font-medium text-zinc-300">スコア（100点満点・任意）</label>
+            <input
+                v-model.number="form.overall_score"
+                type="number"
+                min="0"
+                max="100"
+                :class="inputClass"
+                placeholder="0〜100"
+            />
+            <p v-if="form.errors.overall_score" class="mt-1 text-sm text-red-400">{{ form.errors.overall_score }}</p>
         </div>
 
         <div>
