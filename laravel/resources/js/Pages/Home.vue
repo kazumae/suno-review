@@ -6,7 +6,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
     featured: { type: Array, default: () => [] },
-    ranking: { type: Array, default: () => [] },
+    latestReviews: { type: Array, default: () => [] },
     latest: { type: Array, default: () => [] },
     genres: { type: Array, default: () => [] },
 });
@@ -14,7 +14,7 @@ defineProps({
 
 <template>
     <Head title="SUNOの楽曲レビュー">
-        <meta name="description" content="SUNOで作られた楽曲をレビュワーが聴き込み、ストーリーを添える。ランキング・新着・ジャンルから次のヒットを見つけよう。" />
+        <meta name="description" content="SUNOで作られた楽曲をレビュワーが聴き込み、ストーリーを添える。新着レビュー・ジャンルから次のヒットを見つけよう。" />
     </Head>
 
     <PublicLayout>
@@ -31,32 +31,50 @@ defineProps({
         </section>
 
         <div class="mx-auto max-w-7xl space-y-12 px-4 py-10">
-            <!-- Ranking: compact chart list -->
-            <section v-if="ranking.length">
+            <!-- Latest reviews -->
+            <section v-if="latestReviews.length">
                 <h2 class="mb-4 flex items-center gap-3 text-xl font-bold">
-                    <span class="inline-block h-5 w-1 bg-brand-500"></span> ランキング
+                    <span class="inline-block h-5 w-1 bg-brand-500"></span> 新着レビュー
                 </h2>
-                <div class="grid gap-2 sm:grid-cols-2">
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
                     <Link
-                        v-for="(song, i) in ranking"
-                        :key="song.id"
-                        :href="route('songs.show', song.id)"
-                        class="group flex items-center gap-3 bg-zinc-900 p-2 ring-1 ring-zinc-800 transition hover:ring-brand-500/60"
+                        v-for="review in latestReviews"
+                        :key="review.id"
+                        :href="route('reviews.show', review.slug)"
+                        class="group block"
                     >
-                        <span class="w-6 shrink-0 text-center text-lg font-bold text-brand-500">{{ i + 1 }}</span>
-                        <div class="h-12 w-20 shrink-0 overflow-hidden bg-zinc-800">
-                            <img v-if="song.cover_url" :src="song.cover_url" :alt="song.title" class="h-full w-full object-cover" loading="lazy" />
+                        <div class="overflow-hidden bg-zinc-900 ring-1 ring-zinc-800 transition group-hover:ring-brand-500/60">
+                            <div class="aspect-video w-full overflow-hidden bg-zinc-800">
+                                <img
+                                    v-if="review.cover_url || review.song?.cover_url"
+                                    :src="review.cover_url || review.song.cover_url"
+                                    :alt="review.title"
+                                    class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                                    loading="lazy"
+                                />
+                            </div>
+                            <div class="p-3">
+                                <h3 class="truncate font-semibold text-zinc-100 transition group-hover:text-brand-400">{{ review.title }}</h3>
+                                <p class="truncate text-xs text-zinc-400">{{ review.song?.title }}</p>
+                                <div class="mt-2 flex items-center justify-between gap-2">
+                                    <div class="flex min-w-0 items-center gap-1.5">
+                                        <img
+                                            v-if="review.reviewer?.avatar_url"
+                                            :src="review.reviewer.avatar_url"
+                                            :alt="review.reviewer.name"
+                                            class="h-4 w-4 shrink-0 object-cover"
+                                        />
+                                        <span class="truncate text-xs text-zinc-500">{{ review.reviewer?.name }}</span>
+                                    </div>
+                                    <span
+                                        v-if="review.overall_score"
+                                        class="shrink-0 border border-brand-500/50 px-1.5 py-0.5 text-xs font-semibold text-brand-400"
+                                    >
+                                        {{ review.overall_score }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="min-w-0 flex-1">
-                            <div class="truncate font-semibold transition group-hover:text-brand-400">{{ song.title }}</div>
-                            <div class="truncate text-xs text-zinc-400">{{ song.artist_name }}</div>
-                        </div>
-                        <span
-                            v-if="song.reviews_avg_overall_score"
-                            class="shrink-0 border border-brand-500/50 px-1.5 py-0.5 text-xs font-semibold text-brand-400"
-                        >
-                            {{ Math.round(Number(song.reviews_avg_overall_score)) }}
-                        </span>
                     </Link>
                 </div>
             </section>

@@ -67,6 +67,7 @@ Route::middleware(['auth', 'staff'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('/songs', [AdminSongController::class, 'index'])->name('songs.index');
     Route::get('/songs/create', [AdminSongController::class, 'create'])->name('songs.create');
+    Route::get('/songs/search', [AdminSongController::class, 'search'])->name('songs.search');
     Route::post('/songs', [AdminSongController::class, 'store'])->name('songs.store');
     Route::get('/songs/{song}/edit', [AdminSongController::class, 'edit'])->name('songs.edit');
     Route::put('/songs/{song}', [AdminSongController::class, 'update'])->name('songs.update');

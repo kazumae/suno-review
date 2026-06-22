@@ -29,9 +29,11 @@ class ReviewController extends Controller
 
     public function create(Request $request): Response
     {
+        $songId = $request->integer('song_id') ?: null;
+
         return Inertia::render('Admin/Reviews/Create', [
-            'songs' => $this->songOptions(),
-            'songId' => $request->integer('song_id') ?: null,
+            'selectedSong' => $songId ? $this->songResource(Song::find($songId)) : null,
+            'songId' => $songId,
         ]);
     }
 
@@ -53,10 +55,11 @@ class ReviewController extends Controller
     public function edit(Request $request, Review $review): Response
     {
         $this->authorizeReview($request, $review);
+        $review->loadMissing('song');
 
         return Inertia::render('Admin/Reviews/Edit', [
             'review' => $review,
-            'songs' => $this->songOptions(),
+            'selectedSong' => $this->songResource($review->song),
         ]);
     }
 
@@ -73,9 +76,19 @@ class ReviewController extends Controller
         return redirect()->route('admin.reviews.index')->with('success', $message);
     }
 
-    private function songOptions()
+    private function songResource(?Song $song): ?array
     {
-        return Song::orderBy('title')->get(['id', 'title', 'artist_name']);
+        if (! $song) {
+            return null;
+        }
+
+        return [
+            'id' => $song->id,
+            'title' => $song->title,
+            'artist_name' => $song->artist_name,
+            'genre' => $song->genre,
+            'cover_url' => $song->cover_url,
+        ];
     }
 
     private function validateData(Request $request): array

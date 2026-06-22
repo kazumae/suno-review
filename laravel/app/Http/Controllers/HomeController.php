@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Review;
 use App\Models\Song;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -10,18 +11,14 @@ class HomeController extends Controller
 {
     public function index(): Response
     {
-        // ランキング: スコア付きレビューがある楽曲のみ対象
-        $ranking = Song::published()
-            ->withCount(['reviews' => fn ($q) => $q->published()])
-            ->withAvg(['reviews' => fn ($q) => $q->published()->where('overall_score', '>', 0)], 'overall_score')
-            ->whereHas('reviews', fn ($q) => $q->published()->where('overall_score', '>', 0))
-            ->orderByDesc('is_featured')
-            ->orderByDesc('reviews_avg_overall_score')
-            ->orderByDesc('view_count')
-            ->take(8)
+        // 新着レビュー
+        $latestReviews = Review::published()
+            ->with(['song', 'reviewer'])
+            ->latest('published_at')
+            ->take(6)
             ->get();
 
-        // 新着
+        // 新着楽曲
         $latest = Song::published()
             ->withCount(['reviews' => fn ($q) => $q->published()])
             ->latest('published_at')
@@ -40,7 +37,7 @@ class HomeController extends Controller
             ])
             ->values();
 
-        // メインビジュアル: 編集部が指定したスロット(1-4)を優先、空きはランキング上位で補完
+        // メインビジュアル: 編集部が指定したスロット(1-4)を優先、空きは新着楽曲で補完
         $curated = Song::published()
             ->whereNotNull('featured_position')
             ->withCount(['reviews' => fn ($q) => $q->published()])
@@ -50,7 +47,7 @@ class HomeController extends Controller
             ->keyBy('featured_position');
 
         $usedIds = $curated->pluck('id')->all();
-        $fillPool = $ranking->reject(fn ($s) => in_array($s->id, $usedIds, true))->values();
+        $fillPool = $latest->reject(fn ($s) => in_array($s->id, $usedIds, true))->values();
 
         $featured = collect();
         $fillIndex = 0;
@@ -65,7 +62,7 @@ class HomeController extends Controller
 
         return Inertia::render('Home', [
             'featured' => $featured->values(),
-            'ranking' => $ranking,
+            'latestReviews' => $latestReviews,
             'latest' => $latest,
             'genres' => $genres,
         ]);
