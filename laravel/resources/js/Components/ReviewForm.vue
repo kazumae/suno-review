@@ -1,9 +1,10 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
+import SongCombobox from '@/Components/SongCombobox.vue';
 
 const props = defineProps({
     review: { type: Object, default: null },
-    songs: { type: Array, default: () => [] },
+    selectedSong: { type: Object, default: null },
     songId: { type: [Number, String, null], default: null },
     submitLabel: { type: String, default: '保存' },
 });
@@ -41,11 +42,7 @@ const submit = () => {
     <form class="max-w-2xl space-y-5" @submit.prevent="submit">
         <div>
             <label class="block text-sm font-medium text-zinc-300">対象の楽曲 <span class="text-brand-500">*</span></label>
-            <select v-model="form.song_id" :class="inputClass">
-                <option value="">選択してください</option>
-                <option v-for="s in songs" :key="s.id" :value="s.id">{{ s.title }} / {{ s.artist_name }}</option>
-            </select>
-            <p v-if="form.errors.song_id" class="mt-1 text-sm text-red-400">{{ form.errors.song_id }}</p>
+            <SongCombobox v-model="form.song_id" :selected-song="selectedSong" :error="form.errors.song_id" />
         </div>
 
         <div>

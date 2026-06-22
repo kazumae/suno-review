@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ReviewRequest;
 use App\Models\Song;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -44,6 +45,34 @@ class SongController extends Controller
         return Inertia::render('Admin/Songs/Create', [
             'prefill' => $prefill,
         ]);
+    }
+
+    /**
+     * レビュー作成フォームの楽曲コンボボックス用の検索API。
+     * title / artist_name / genre を部分一致。空クエリでも先頭20件を返す。
+     */
+    public function search(Request $request): JsonResponse
+    {
+        $q = trim((string) $request->query('q', ''));
+
+        $songs = Song::query()
+            ->when($q !== '', function ($query) use ($q) {
+                $query->where('title', 'like', "%{$q}%")
+                    ->orWhere('artist_name', 'like', "%{$q}%")
+                    ->orWhere('genre', 'like', "%{$q}%");
+            })
+            ->orderBy('title')
+            ->limit(20)
+            ->get(['id', 'title', 'artist_name', 'genre', 'cover_image_path'])
+            ->map(fn (Song $s) => [
+                'id' => $s->id,
+                'title' => $s->title,
+                'artist_name' => $s->artist_name,
+                'genre' => $s->genre,
+                'cover_url' => $s->cover_url,
+            ]);
+
+        return response()->json(['songs' => $songs]);
     }
 
     public function store(Request $request): RedirectResponse

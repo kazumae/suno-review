@@ -5,7 +5,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
 defineProps({
     review: { type: Object, required: true },
-    songs: { type: Array, default: () => [] },
+    selectedSong: { type: Object, default: null },
 });
 </script>
 
@@ -18,7 +18,7 @@ defineProps({
             <Link :href="route('reviews.show', review.slug)" class="text-sm text-brand-400 transition hover:text-brand-300">公開ページを見る →</Link>
         </div>
         <div class="mt-6">
-            <ReviewForm :review="review" :songs="songs" submit-label="更新する" />
+            <ReviewForm :review="review" :selected-song="selectedSong" submit-label="更新する" />
         </div>
     </AdminLayout>
 </template>
