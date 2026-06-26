@@ -43,6 +43,8 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
+            // OGP デフォルト画像の絶対URL。各ページの og:image フォールバックに使う
+            'ogImage' => asset('images/og-default.png'),
         ];
     }
 }
