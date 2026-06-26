@@ -21,6 +21,15 @@ const form = useForm({
     inline: true,
 });
 
+// レビュワーへのメッセージの記入例テンプレート。空欄のときだけ挿入でき、入力済みなら上書きしない
+const noteTemplate = `【この曲で一番こだわった点】\n\n\n【制作時に特に意図したこと】\n\n\n【生成後に編集・調整した箇所（あれば）】\n\n`;
+
+const insertNoteTemplate = () => {
+    if (form.note.trim() === '') {
+        form.note = noteTemplate;
+    }
+};
+
 // HTML5バリデーション通過後に注意事項モーダルを表示する
 const openNotice = () => {
     showNotice.value = true;
@@ -83,8 +92,26 @@ const submit = () => {
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-zinc-300">レビュワーへのメッセージ（任意）</label>
+                <div class="flex items-center justify-between gap-2">
+                    <label class="block text-sm font-medium text-zinc-300">レビュワーへのメッセージ（任意）</label>
+                    <button
+                        type="button"
+                        :disabled="form.note.trim() !== ''"
+                        class="shrink-0 text-xs text-brand-500 hover:underline disabled:cursor-not-allowed disabled:text-zinc-600 disabled:no-underline"
+                        @click="insertNoteTemplate"
+                    >
+                        記入例を挿入
+                    </button>
+                </div>
                 <textarea v-model="form.note" rows="4" :class="inputClass"></textarea>
+                <p class="mt-1 text-xs text-zinc-500">
+                    曲の背景を教えてもらえると、レビュワーが意図を汲んだレビューを書きやすくなります。たとえば次のような内容です。
+                </p>
+                <ul class="mt-1 space-y-0.5 text-xs text-zinc-500">
+                    <li>・この曲で一番こだわった点</li>
+                    <li>・制作時に特に意図したこと</li>
+                    <li>・生成後に編集・調整した箇所（あれば）</li>
+                </ul>
                 <p v-if="form.errors.note" class="mt-1 text-sm text-red-400">{{ form.errors.note }}</p>
             </div>
 
