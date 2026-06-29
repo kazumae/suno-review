@@ -36,11 +36,11 @@ return [
     ],
 
     /*
-    | Google Tag Manager のコンテナID。値があるときだけ計測タグを出力する。
+    | Google Analytics 4 の測定ID。値があるときだけ gtag.js を出力する。
     | ローカル/開発のトラフィックを本番GA4に混ぜないよう env で制御する。
     */
-    'gtm' => [
-        'id' => env('GTM_CONTAINER_ID'),
+    'ga4' => [
+        'measurement_id' => env('GA4_MEASUREMENT_ID'),
     ],
 
 ];
