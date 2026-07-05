@@ -13,6 +13,9 @@ const trackPlay = (platform) => trackEvent('play_click', { platform, song_id: pr
 
 // 構造化データ(MusicRecording)。SSR時もURLを組めるよう ziggy の base URL を使う
 const baseUrl = usePage().props.ziggy.url;
+
+// 動的OGP画像。?v= は編集時にクローラへ再取得させるキャッシュバスター
+const ogImage = `${baseUrl}/og/songs/${props.song.id}.png?v=${Date.parse(props.song.updated_at) || 0}`;
 const jsonLd = toJsonLd({
     '@context': 'https://schema.org',
     '@type': 'MusicRecording',
@@ -34,9 +37,11 @@ const jsonLd = toJsonLd({
         <meta name="description" :content="(song.description || '').slice(0, 120)" />
         <meta property="og:title" :content="song.title + ' / ' + song.artist_name" />
         <meta property="og:description" :content="(song.description || '').slice(0, 120)" />
-        <meta property="og:image" :content="song.cover_url || $page.props.ogImage" />
+        <meta property="og:image" :content="ogImage" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" :content="song.cover_url || $page.props.ogImage" />
+        <meta name="twitter:image" :content="ogImage" />
         <component :is="'script'" type="application/ld+json">{{ jsonLd }}</component>
     </Head>
 

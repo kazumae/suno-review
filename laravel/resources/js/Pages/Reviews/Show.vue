@@ -15,6 +15,9 @@ const publishedDate = props.review.published_at
 
 // 構造化データ(Review)。SSR時もURLを組めるよう ziggy の base URL を使う
 const baseUrl = usePage().props.ziggy.url;
+
+// 動的OGP画像(スコア入り)。?v= は編集時にクローラへ再取得させるキャッシュバスター
+const ogImage = `${baseUrl}/og/reviews/${props.review.slug}.png?v=${Date.parse(props.review.updated_at) || 0}`;
 const jsonLd = toJsonLd({
     '@context': 'https://schema.org',
     '@type': 'Review',
@@ -45,9 +48,11 @@ const jsonLd = toJsonLd({
         <meta name="description" :content="(review.body || '').slice(0, 120)" />
         <meta property="og:title" :content="review.title" />
         <meta property="og:description" :content="(review.body || '').slice(0, 120)" />
-        <meta property="og:image" :content="review.cover_url || $page.props.ogImage" />
+        <meta property="og:image" :content="ogImage" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" :content="review.cover_url || $page.props.ogImage" />
+        <meta name="twitter:image" :content="ogImage" />
         <component :is="'script'" type="application/ld+json">{{ jsonLd }}</component>
     </Head>
 

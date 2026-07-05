@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\EmailChangeController;
 use App\Http\Controllers\DevLoginController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OgImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReviewerApplicationController;
@@ -25,6 +26,10 @@ use Inertia\Inertia;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/lp', fn () => Inertia::render('Landing'))->name('landing');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+
+// 動的OGP画像(スコア+カバー合成)。シェア時にクローラが取得する
+Route::get('/og/songs/{song}.png', [OgImageController::class, 'song'])->name('og.song');
+Route::get('/og/reviews/{review}.png', [OgImageController::class, 'review'])->name('og.review');
 
 Route::get('/songs/{song}', [SongController::class, 'show'])->name('songs.show');
 Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
