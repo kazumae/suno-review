@@ -28,12 +28,24 @@ curl -s -o /dev/null -w "%{http_code}" http://localhost:18080/   # 200 で起動
 - node サービス（vite dev, 5173）は不要。`laravel/public/hot` が無ければ `@vite` はビルド済みアセットを使う。
   フロント変更後は `cd laravel && npm run build`（client + SSR 両方走る）してからブラウザ確認。
 - `APP_URL` は 8080 のままでOK。`forceRootUrl` していないので URL 生成はリクエストホスト追従（18080 で正しく動く）。
-- SSR サーバは起動していないので Inertia はクライアントレンダリングにフォールバックする（検証には支障なし）。
+- SSR サーバを起動しない場合、Inertia はクライアントレンダリングにフォールバックする。
+
+## SSR経路の検証（本番はSSRで動いている）
+
+OGP・JSON-LD など「生HTMLに出るべきもの」は SSR 経路で確認する。ホストの node で SSR サーバを起動し、
+アプリコンテナから `host.docker.internal` 経由で繋ぐのが手軽:
+
+```bash
+cd laravel && node bootstrap/ssr/ssr.js &          # ホストの13714で起動
+printf '\nINERTIA_SSR_URL=http://host.docker.internal:13714\n' >> laravel/.env   # 検証後は必ず削除
+curl -s http://localhost:18080/songs/9 | grep -c '<h1'   # 1ならSSRが効いている
+```
 
 ## データ
 
 - ローカル DB はシード済み。曲 id=9 は youtube_url あり（SUNO/YouTube 両ボタンの検証に使える）。`/songs/9`
 - ページデータは Inertia の `data-page` 属性（HTML エスケープされた JSON）から取れる。
+- **ルートキーの罠: Song/User はデフォルト(id / handle指定)だが、Review は `getRouteKeyName() = slug`**（URLは `/reviews/{slug}`）。
 
 ## 主要フロー
 

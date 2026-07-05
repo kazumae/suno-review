@@ -1,7 +1,8 @@
 <script setup>
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import ScorePanel from '@/Components/ScorePanel.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import { toJsonLd } from '@/lib/jsonld';
 
 const props = defineProps({
     review: { type: Object, required: true },
@@ -11,6 +12,32 @@ const paragraphs = (props.review.body || '').split(/\n{2,}/);
 const publishedDate = props.review.published_at
     ? new Date(props.review.published_at).toLocaleDateString('ja-JP')
     : '';
+
+// 構造化データ(Review)。SSR時もURLを組めるよう ziggy の base URL を使う
+const baseUrl = usePage().props.ziggy.url;
+const jsonLd = toJsonLd({
+    '@context': 'https://schema.org',
+    '@type': 'Review',
+    name: props.review.title,
+    url: `${baseUrl}/reviews/${props.review.slug}`,
+    ...(props.review.reviewer?.name ? { author: { '@type': 'Person', name: props.review.reviewer.name } } : {}),
+    ...(props.review.published_at ? { datePublished: props.review.published_at } : {}),
+    ...(props.review.overall_score != null
+        ? { reviewRating: { '@type': 'Rating', ratingValue: props.review.overall_score, bestRating: 100, worstRating: 0 } }
+        : {}),
+    ...(props.review.song
+        ? {
+              itemReviewed: {
+                  '@type': 'MusicRecording',
+                  name: props.review.song.title,
+                  url: `${baseUrl}/songs/${props.review.song.id}`,
+                  byArtist: { '@type': 'MusicGroup', name: props.review.song.artist_name },
+                  ...(props.review.song.cover_url ? { image: props.review.song.cover_url } : {}),
+              },
+          }
+        : {}),
+    ...(props.review.body ? { reviewBody: props.review.body.slice(0, 500) } : {}),
+});
 </script>
 
 <template>
@@ -21,6 +48,7 @@ const publishedDate = props.review.published_at
         <meta property="og:image" :content="review.cover_url || $page.props.ogImage" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" :content="review.cover_url || $page.props.ogImage" />
+        <component :is="'script'" type="application/ld+json">{{ jsonLd }}</component>
     </Head>
 
     <PublicLayout>

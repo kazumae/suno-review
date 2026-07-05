@@ -1,14 +1,32 @@
 <script setup>
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import ShareButtons from '@/Components/ShareButtons.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { trackEvent } from '@/lib/analytics';
+import { toJsonLd } from '@/lib/jsonld';
 
 const props = defineProps({
     song: { type: Object, required: true },
 });
 
 const trackPlay = (platform) => trackEvent('play_click', { platform, song_id: props.song.id });
+
+// 構造化データ(MusicRecording)。SSR時もURLを組めるよう ziggy の base URL を使う
+const baseUrl = usePage().props.ziggy.url;
+const jsonLd = toJsonLd({
+    '@context': 'https://schema.org',
+    '@type': 'MusicRecording',
+    name: props.song.title,
+    url: `${baseUrl}/songs/${props.song.id}`,
+    byArtist: {
+        '@type': 'MusicGroup',
+        name: props.song.artist_name,
+        ...(props.song.artist_url ? { url: props.song.artist_url } : {}),
+    },
+    ...(props.song.genre ? { genre: props.song.genre } : {}),
+    ...(props.song.cover_url ? { image: props.song.cover_url } : {}),
+    ...(props.song.published_at ? { datePublished: props.song.published_at } : {}),
+});
 </script>
 
 <template>
@@ -19,6 +37,7 @@ const trackPlay = (platform) => trackEvent('play_click', { platform, song_id: pr
         <meta property="og:image" :content="song.cover_url || $page.props.ogImage" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" :content="song.cover_url || $page.props.ogImage" />
+        <component :is="'script'" type="application/ld+json">{{ jsonLd }}</component>
     </Head>
 
     <PublicLayout>
