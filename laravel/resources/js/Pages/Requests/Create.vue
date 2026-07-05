@@ -3,6 +3,7 @@ import PublicLayout from '@/Layouts/PublicLayout.vue';
 import RequestNoticeModal from '@/Components/RequestNoticeModal.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { trackEvent } from '@/lib/analytics';
 
 const genres = ['City Pop', 'Lo-fi', 'Ballad', 'Rock', 'EDM', 'Ambient', 'HipHop', 'J-Pop', 'その他'];
 
@@ -37,6 +38,10 @@ const openNotice = () => {
 const submit = () => {
     form.post(route('requests.store'), {
         // 成功時はhomeへリダイレクト。エラー時はモーダルを閉じてフォーム上のエラーを見せる
+        onSuccess: () => {
+            // バリデーション通過して実際に受理された依頼だけ数える
+            trackEvent('request_submit', { genre: form.genre || '未選択' });
+        },
         onError: () => {
             showNotice.value = false;
         },

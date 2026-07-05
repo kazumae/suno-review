@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import RequestNoticeModal from '@/Components/RequestNoticeModal.vue';
+import { trackEvent } from '@/lib/analytics';
 
 const done = ref(false);
 const showNotice = ref(false);
@@ -39,6 +40,8 @@ const submit = () => {
     form.post(route('requests.store'), {
         preserveScroll: true,
         onSuccess: () => {
+            // バリデーション通過して実際に受理された依頼だけ数える（reset前にgenreを拾う）
+            trackEvent('request_submit', { genre: form.genre || '未選択' });
             done.value = true;
             form.reset();
             showNotice.value = false;
