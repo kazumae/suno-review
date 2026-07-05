@@ -2,10 +2,13 @@
 import PublicLayout from '@/Layouts/PublicLayout.vue';
 import ShareButtons from '@/Components/ShareButtons.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import { trackEvent } from '@/lib/analytics';
 
-defineProps({
+const props = defineProps({
     song: { type: Object, required: true },
 });
+
+const trackPlay = (platform) => trackEvent('play_click', { platform, song_id: props.song.id });
 </script>
 
 <template>
@@ -48,8 +51,8 @@ defineProps({
                         <span v-else>{{ song.artist_name }}</span>
                     </p>
                     <div class="mt-4 flex flex-wrap gap-2 text-sm">
-                        <a :href="song.suno_url" target="_blank" rel="noopener" class="rounded-full bg-brand-500 px-4 py-2 font-semibold text-black transition hover:bg-brand-400">SUNOで聴く</a>
-                        <a v-if="song.youtube_url" :href="song.youtube_url" target="_blank" rel="noopener" class="rounded-full border border-zinc-700 px-4 py-2 text-zinc-200 transition hover:border-zinc-500">YouTube</a>
+                        <a :href="song.suno_url" target="_blank" rel="noopener" class="rounded-full bg-brand-500 px-4 py-2 font-semibold text-black transition hover:bg-brand-400" @click="trackPlay('suno')">SUNOで聴く</a>
+                        <a v-if="song.youtube_url" :href="song.youtube_url" target="_blank" rel="noopener" class="rounded-full border border-zinc-700 px-4 py-2 text-zinc-200 transition hover:border-zinc-500" @click="trackPlay('youtube')">YouTube</a>
                     </div>
                     <p class="mt-3 text-xs text-zinc-600">{{ song.view_count }} 回再生 ・ レビュー {{ song.reviews?.length || 0 }}件</p>
                     <div class="mt-4">
