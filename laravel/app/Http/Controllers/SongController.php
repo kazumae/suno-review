@@ -12,7 +12,11 @@ class SongController extends Controller
     {
         abort_unless($song->status === 'published', 404);
 
+        // updated_at は「コンテンツの最終編集」として sitemap の lastmod と OGP画像のバージョンに使うため、
+        // 閲覧カウントでは更新しない
+        $song->timestamps = false;
         $song->increment('view_count');
+        $song->timestamps = true;
 
         $song->load([
             'submitter:id,name,handle',
