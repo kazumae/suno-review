@@ -17,12 +17,14 @@ use App\Http\Controllers\ReviewerApplicationController;
 use App\Http\Controllers\ReviewerController;
 use App\Http\Controllers\ReviewRequestController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SongController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/lp', fn () => Inertia::render('Landing'))->name('landing');
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/songs/{song}', [SongController::class, 'show'])->name('songs.show');
 Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
