@@ -22,7 +22,7 @@ class SitemapController extends Controller
     {
         $urls = [];
 
-        foreach (['home', 'landing', 'requests.create', 'reviewers.index'] as $name) {
+        foreach (['home', 'landing', 'chart', 'requests.create', 'reviewers.index'] as $name) {
             $urls[] = ['loc' => route($name)];
         }
 

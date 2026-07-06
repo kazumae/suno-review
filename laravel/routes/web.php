@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ReviewerController as AdminReviewerController;
 use App\Http\Controllers\Admin\ReviewRequestController as AdminReviewRequestController;
 use App\Http\Controllers\Admin\SongController as AdminSongController;
 use App\Http\Controllers\Auth\EmailChangeController;
+use App\Http\Controllers\ChartController;
 use App\Http\Controllers\DevLoginController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\HomeController;
@@ -31,6 +32,7 @@ Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap')
 Route::get('/og/songs/{song}.png', [OgImageController::class, 'song'])->name('og.song');
 Route::get('/og/reviews/{review}.png', [OgImageController::class, 'review'])->name('og.review');
 
+Route::get('/chart', [ChartController::class, 'index'])->name('chart');
 Route::get('/songs/{song}', [SongController::class, 'show'])->name('songs.show');
 Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('reviews.show');
 Route::get('/reviewers', [ReviewerController::class, 'index'])->name('reviewers.index');
