@@ -25,6 +25,7 @@ const search = () => {
                 </Link>
                 <nav class="hidden items-center gap-5 text-sm text-zinc-400 md:flex">
                     <Link :href="route('home')" class="transition hover:text-white">ホーム</Link>
+                    <Link :href="route('chart')" class="transition hover:text-white">チャート</Link>
                     <a href="/#genres" class="transition hover:text-white">ジャンル</a>
                     <Link :href="route('reviewers.index')" class="transition hover:text-white">レビュワー</Link>
                 </nav>
@@ -72,6 +73,7 @@ const search = () => {
                         <p class="mt-1">SUNOの楽曲に、ストーリーを。レビューで次のヒットを。</p>
                     </div>
                     <nav class="flex gap-5">
+                        <Link :href="route('chart')" class="transition hover:text-zinc-300">チャート</Link>
                         <Link :href="route('reviewers.index')" class="transition hover:text-zinc-300">レビュワー</Link>
                         <Link :href="route('requests.create')" class="transition hover:text-zinc-300">レビュー依頼</Link>
                     </nav>
