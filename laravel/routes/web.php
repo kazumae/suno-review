@@ -42,10 +42,14 @@ Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 // レビュー依頼フォーム（必須要件）
 Route::get('/request', [ReviewRequestController::class, 'create'])->name('requests.create');
-Route::post('/request', [ReviewRequestController::class, 'store'])->name('requests.store');
+Route::post('/request', [ReviewRequestController::class, 'store'])
+    ->middleware('throttle:review-requests')
+    ->name('requests.store');
 
 // レビュワー申込みフォーム（LP埋め込み）
-Route::post('/apply', [ReviewerApplicationController::class, 'store'])->name('applications.store');
+Route::post('/apply', [ReviewerApplicationController::class, 'store'])
+    ->middleware('throttle:reviewer-applications')
+    ->name('applications.store');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

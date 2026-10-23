@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReviewerApplicationStoreRequest;
 use App\Models\ReviewerApplication;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class ReviewerApplicationController extends Controller
 {
-    public function store(Request $request): RedirectResponse
+    public function store(ReviewerApplicationStoreRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'suno_id' => ['required', 'string', 'max:255'],
-            'motivation' => ['required', 'string', 'max:2000'],
-        ]);
+        $data = $request->validated();
 
         $data['status'] = 'pending';
 

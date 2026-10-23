@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReviewRequestStoreRequest;
 use App\Models\ReviewRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -15,16 +15,9 @@ class ReviewRequestController extends Controller
         return Inertia::render('Requests/Create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(ReviewRequestStoreRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'suno_url' => ['required', 'url', 'max:255'],
-            'artist_url' => ['required', 'url', 'max:255'],
-            'youtube_url' => ['nullable', 'url', 'max:255'],
-            'title' => ['nullable', 'string', 'max:255'],
-            'genre' => ['nullable', 'string', 'max:50'],
-            'note' => ['nullable', 'string', 'max:2000'],
-        ]);
+        $data = $request->validated();
 
         $data['requester_id'] = $request->user()?->id;
         $data['status'] = 'open';
