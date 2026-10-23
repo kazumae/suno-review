@@ -8,6 +8,8 @@ defineProps({
 });
 
 const statusLabel = { open: '未対応', assigned: '対応中', done: '完了', rejected: '却下' };
+
+const formatDate = (iso) => (iso ? new Date(iso).toLocaleDateString('ja-JP') : '');
 </script>
 
 <template>
@@ -45,9 +47,12 @@ const statusLabel = { open: '未対応', assigned: '対応中', done: '完了', 
                     <span class="shrink-0 bg-zinc-800 px-2 py-0.5 text-xs text-zinc-300">{{ statusLabel[r.status] ?? r.status }}</span>
                     <div class="min-w-0 flex-1">
                         <div class="truncate text-sm">{{ r.title || '(無題)' }}</div>
-                        <a :href="r.suno_url" target="_blank" rel="noopener" class="truncate text-xs text-zinc-500 transition hover:text-brand-400">{{ r.suno_url }}</a>
+                        <a :href="r.suno_url" target="_blank" rel="noopener" class="block w-fit max-w-full truncate text-xs leading-6 text-zinc-500 transition hover:text-brand-400">{{ r.suno_url }}</a>
                     </div>
-                    <span class="shrink-0 text-xs text-zinc-500">{{ r.requester?.name || '匿名' }}</span>
+                    <div class="shrink-0 text-right text-xs text-zinc-500">
+                        <div>{{ r.requester?.name || '匿名' }}</div>
+                        <div class="mt-0.5">{{ formatDate(r.created_at) }}</div>
+                    </div>
                 </div>
                 <div v-if="! recentRequests.length" class="p-4 text-sm text-zinc-500">依頼はまだありません。</div>
             </div>
