@@ -16,6 +16,8 @@ const statuses = [
 const updateStatus = (id, status) => {
     router.patch(route('admin.requests.update', id), { status }, { preserveScroll: true });
 };
+
+const formatDate = (iso) => (iso ? new Date(iso).toLocaleDateString('ja-JP') : '');
 </script>
 
 <template>
@@ -31,6 +33,7 @@ const updateStatus = (id, status) => {
                         <th class="p-3 font-medium">タイトル / URL</th>
                         <th class="p-3 font-medium">ジャンル</th>
                         <th class="p-3 font-medium">依頼者</th>
+                        <th class="p-3 font-medium">依頼日</th>
                         <th class="p-3 font-medium">ステータス</th>
                         <th class="p-3 font-medium"></th>
                     </tr>
@@ -44,6 +47,7 @@ const updateStatus = (id, status) => {
                         </td>
                         <td class="p-3 text-zinc-400">{{ r.genre || '—' }}</td>
                         <td class="p-3 text-zinc-400">{{ r.requester?.name || '匿名' }}</td>
+                        <td class="p-3 whitespace-nowrap text-xs text-zinc-500">{{ formatDate(r.created_at) }}</td>
                         <td class="p-3">
                             <select
                                 :value="r.status"
@@ -58,7 +62,7 @@ const updateStatus = (id, status) => {
                         </td>
                     </tr>
                     <tr v-if="! requests.length">
-                        <td colspan="5" class="p-4 text-zinc-500">依頼はまだありません。</td>
+                        <td colspan="6" class="p-4 text-zinc-500">依頼はまだありません。</td>
                     </tr>
                 </tbody>
             </table>
