@@ -28,9 +28,10 @@ const formatDate = (iso) => (iso ? new Date(iso).toLocaleDateString('ja-JP') : '
 
         <div class="mt-6 overflow-x-auto border border-zinc-800">
             <table class="w-full text-sm">
-                <thead class="bg-zinc-900 text-left text-zinc-400">
+                <thead class="whitespace-nowrap bg-zinc-900 text-left text-zinc-400">
                     <tr>
                         <th class="p-3 font-medium">タイトル / URL</th>
+                        <th class="p-3 font-medium">アーティスト</th>
                         <th class="p-3 font-medium">ジャンル</th>
                         <th class="p-3 font-medium">依頼者</th>
                         <th class="p-3 font-medium">依頼日</th>
@@ -45,6 +46,7 @@ const formatDate = (iso) => (iso ? new Date(iso).toLocaleDateString('ja-JP') : '
                             <a :href="r.suno_url" target="_blank" rel="noopener" class="text-xs text-zinc-500 transition hover:text-brand-400">{{ r.suno_url }}</a>
                             <p v-if="r.note" class="mt-1 max-w-md text-xs text-zinc-500">{{ r.note }}</p>
                         </td>
+                        <td class="p-3 text-zinc-400">{{ r.artist_name || '—' }}</td>
                         <td class="p-3 text-zinc-400">{{ r.genre || '—' }}</td>
                         <td class="p-3 text-zinc-400">{{ r.requester?.name || '匿名' }}</td>
                         <td class="p-3 whitespace-nowrap text-xs text-zinc-500">{{ formatDate(r.created_at) }}</td>
@@ -62,7 +64,7 @@ const formatDate = (iso) => (iso ? new Date(iso).toLocaleDateString('ja-JP') : '
                         </td>
                     </tr>
                     <tr v-if="! requests.length">
-                        <td colspan="6" class="p-4 text-zinc-500">依頼はまだありません。</td>
+                        <td colspan="7" class="p-4 text-zinc-500">依頼はまだありません。</td>
                     </tr>
                 </tbody>
             </table>

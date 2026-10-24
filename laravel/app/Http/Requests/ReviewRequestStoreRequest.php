@@ -17,6 +17,7 @@ class ReviewRequestStoreRequest extends FormRequest
         return [
             // 楽曲は SUNO の URL(共有リンク含む)、YouTube 欄は YouTube の URL だけを受け付ける
             'suno_url' => ['required', 'url:http,https', 'max:255', 'regex:#^https?://([a-z0-9-]+\.)*suno\.(com|ai)/#i'],
+            'artist_name' => ['required', 'string', 'max:255'],
             'artist_url' => ['required', 'url:http,https', 'max:255'],
             'youtube_url' => ['nullable', 'url:http,https', 'max:255', 'regex:#^https?://([a-z0-9-]+\.)*(youtube\.com|youtu\.be)/#i'],
             'title' => ['nullable', 'string', 'max:255'],

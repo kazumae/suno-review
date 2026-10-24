@@ -14,6 +14,7 @@ const inputClass =
 
 const form = useForm({
     suno_url: '',
+    artist_name: '',
     artist_url: '',
     youtube_url: '',
     title: '',
@@ -65,6 +66,12 @@ const submit = () => {
                 <label class="block text-sm font-medium text-zinc-300">SUNO URL <span class="text-brand-500">*</span></label>
                 <input v-model="form.suno_url" type="url" required placeholder="https://suno.com/song/... または共有リンク" :class="inputClass" />
                 <p v-if="form.errors.suno_url" class="mt-1 text-sm text-red-400">{{ form.errors.suno_url }}</p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-zinc-300">アーティスト名 <span class="text-brand-500">*</span></label>
+                <input v-model="form.artist_name" type="text" required :class="inputClass" />
+                <p v-if="form.errors.artist_name" class="mt-1 text-sm text-red-400">{{ form.errors.artist_name }}</p>
             </div>
 
             <div>

@@ -14,6 +14,7 @@ class ReviewRequestTest extends TestCase
     {
         return array_merge([
             'suno_url' => 'https://suno.com/s/vhAm4fua9zT8ThTr',
+            'artist_name' => 'テストアーティスト',
             'artist_url' => 'https://suno.com/@example',
             'youtube_url' => 'https://youtu.be/15B4WbRM3ZE',
             'title' => 'テスト曲',
@@ -30,8 +31,32 @@ class ReviewRequestTest extends TestCase
 
         $this->assertDatabaseHas('review_requests', [
             'suno_url' => 'https://suno.com/s/vhAm4fua9zT8ThTr',
+            'artist_name' => 'テストアーティスト',
             'status' => 'open',
         ]);
+    }
+
+    public static function blankArtistNames(): array
+    {
+        return [
+            '未送信' => [null],
+            '空文字' => [''],
+            '空白だけ' => ['   '],
+        ];
+    }
+
+    #[DataProvider('blankArtistNames')]
+    public function test_artist_name_is_required(?string $name): void
+    {
+        $payload = $this->payload(['artist_name' => $name]);
+        if ($name === null) {
+            unset($payload['artist_name']);
+        }
+
+        $this->post(route('requests.store'), $payload)
+            ->assertSessionHasErrors('artist_name');
+
+        $this->assertDatabaseCount('review_requests', 0);
     }
 
     public static function sunoUrls(): array
