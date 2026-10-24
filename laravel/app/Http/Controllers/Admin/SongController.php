@@ -35,6 +35,7 @@ class SongController extends Controller
                     'request_id' => $rr->id,
                     'title' => $rr->title,
                     'suno_url' => $rr->suno_url,
+                    'artist_name' => $rr->artist_name,
                     'artist_url' => $rr->artist_url,
                     'youtube_url' => $rr->youtube_url,
                     'genre' => $rr->genre,
